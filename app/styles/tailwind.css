@@ -4,3 +4,26 @@
  */
 
 @import 'tailwindcss';
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/clash_display/ClashDisplay-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Clash Grotesk';
+  src: url('/fonts/clash_grotesk/ClashGrotesk-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-clash-display: 'Clash Display', sans-serif;
+  --font-clash-grotesk: 'Clash Grotesk', sans-serif;
+  --color-text: #1d1d1f;
+  --color-bg: #f5f5f5;
+}

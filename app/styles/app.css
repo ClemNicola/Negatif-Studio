@@ -12,6 +12,21 @@ img {
   border-radius: 4px;
 }
 
+@layer base {
+  body {
+    font-family: var(--font-clash-grotesk);
+    color: var(--color-text);
+    background: var(--color-bg);
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-clash-display);
+    color: var(--color-text);
+  }
+}
+
 /*
 * --------------------------------------------------
 * Non anchor links
@@ -228,7 +243,8 @@ button.reset:hover:not(:has(> *)) {
 .header {
   align-items: center;
   background: #fff;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   height: var(--header-height);
   padding: 0 1rem;
   position: sticky;
@@ -254,7 +270,7 @@ button.reset:hover:not(:has(> *)) {
   @media (min-width: 45em) {
     display: flex;
     grid-gap: 1rem;
-    margin-left: 3rem;
+    margin-left: 2rem;
   }
 }
 

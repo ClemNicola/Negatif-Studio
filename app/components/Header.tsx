@@ -17,6 +17,13 @@ interface HeaderProps {
 
 type Viewport = 'desktop' | 'mobile';
 
+const MENU_ITEM_OVERRIDES: Record<string, string | null> = {
+  home: 'Prints',
+  catalog: 'Studio',
+  catalogue: 'Studio',
+  contact: null,
+};
+
 export function Header({
   header,
   isLoggedIn,
@@ -26,15 +33,20 @@ export function Header({
   const {shop, menu} = header;
   return (
     <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
-      </NavLink>
       <HeaderMenu
         menu={menu}
         viewport="desktop"
         primaryDomainUrl={header.shop.primaryDomain.url}
         publicStoreDomain={publicStoreDomain}
       />
+      <NavLink
+        prefetch="intent"
+        to="/"
+        className="text-3xl font-extrabold font-clash-display tracking-wider"
+        end
+      >
+        {shop.name}
+      </NavLink>
       <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
     </header>
   );
@@ -55,20 +67,17 @@ export function HeaderMenu({
   const {close} = useAside();
 
   return (
-    <nav className={className} role="navigation">
-      {viewport === 'mobile' && (
-        <NavLink
-          end
-          onClick={close}
-          prefetch="intent"
-          style={activeLinkStyle}
-          to="/"
-        >
-          Home
-        </NavLink>
-      )}
+    <nav
+      className={`${className} font-clash-grotesk text-xl`}
+      role="navigation"
+    >
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
+
+        const key = item.title.trim().toLowerCase();
+        const override = MENU_ITEM_OVERRIDES[key];
+        if (override === null) return null;
+        const title = override ?? item.title;
 
         // if the url is internal, we strip the domain
         const url =
@@ -87,7 +96,7 @@ export function HeaderMenu({
             style={activeLinkStyle}
             to={url}
           >
-            {item.title}
+            {title}
           </NavLink>
         );
       })}
@@ -100,15 +109,19 @@ function HeaderCtas({
   cart,
 }: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
   return (
-    <nav className="header-ctas" role="navigation">
+    <nav className="header-ctas font-clash-grotesk text-xl" role="navigation">
       <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
-          </Await>
-        </Suspense>
-      </NavLink>
+      <Suspense fallback={null}>
+        <Await resolve={isLoggedIn} errorElement={null}>
+          {(isLoggedIn) =>
+            isLoggedIn ? (
+              <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
+                Account
+              </NavLink>
+            ) : null
+          }
+        </Await>
+      </Suspense>
       <SearchToggle />
       <CartToggle cart={cart} />
     </nav>
@@ -225,7 +238,7 @@ function activeLinkStyle({
   isPending: boolean;
 }) {
   return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
+    textDecoration: isActive ? 'underline' : undefined,
+    color: isPending ? 'grey' : 'var(--color-text)',
   };
 }
