@@ -12,33 +12,20 @@ interface HeaderProps {
   header: HeaderQuery;
   cart: Promise<CartApiQueryFragment | null>;
   isLoggedIn: Promise<boolean>;
-  publicStoreDomain: string;
 }
 
 type Viewport = 'desktop' | 'mobile';
 
-const MENU_ITEM_OVERRIDES: Record<string, string | null> = {
-  home: 'Prints',
-  catalog: 'Studio',
-  catalogue: 'Studio',
-  contact: null,
-};
+const HEADER_NAV = [
+  {title: 'Prints', to: '/collections/all'},
+  {title: 'Studio', to: '/pages/studio'},
+] as const;
 
-export function Header({
-  header,
-  isLoggedIn,
-  cart,
-  publicStoreDomain,
-}: HeaderProps) {
-  const {shop, menu} = header;
+export function Header({header, isLoggedIn, cart}: HeaderProps) {
+  const {shop} = header;
   return (
     <header className="header">
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
+      <HeaderMenu viewport="desktop" />
       <NavLink
         prefetch="intent"
         to="/"
@@ -52,54 +39,27 @@ export function Header({
   );
 }
 
-export function HeaderMenu({
-  menu,
-  primaryDomainUrl,
-  viewport,
-  publicStoreDomain,
-}: {
-  menu: HeaderProps['header']['menu'];
-  primaryDomainUrl: HeaderProps['header']['shop']['primaryDomain']['url'];
-  viewport: Viewport;
-  publicStoreDomain: HeaderProps['publicStoreDomain'];
-}) {
-  const className = `header-menu-${viewport}`;
+export function HeaderMenu({viewport}: {viewport: Viewport}) {
   const {close} = useAside();
 
   return (
     <nav
-      className={`${className} font-clash-grotesk text-xl`}
+      className={`header-menu-${viewport} font-clash-grotesk text-xl`}
       role="navigation"
     >
-      {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
-        if (!item.url) return null;
-
-        const key = item.title.trim().toLowerCase();
-        const override = MENU_ITEM_OVERRIDES[key];
-        if (override === null) return null;
-        const title = override ?? item.title;
-
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        return (
-          <NavLink
-            className="header-menu-item"
-            end
-            key={item.id}
-            onClick={close}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
-          >
-            {title}
-          </NavLink>
-        );
-      })}
+      {HEADER_NAV.map((item) => (
+        <NavLink
+          className="header-menu-item link-underline"
+          end
+          key={item.to}
+          onClick={close}
+          prefetch="intent"
+          style={activeLinkStyle}
+          to={item.to}
+        >
+          {item.title}
+        </NavLink>
+      ))}
     </nav>
   );
 }
@@ -115,7 +75,12 @@ function HeaderCtas({
         <Await resolve={isLoggedIn} errorElement={null}>
           {(isLoggedIn) =>
             isLoggedIn ? (
-              <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
+              <NavLink
+                prefetch="intent"
+                to="/account"
+                className="link-underline"
+                style={activeLinkStyle}
+              >
                 Account
               </NavLink>
             ) : null
@@ -167,7 +132,7 @@ function CartBadge({count}: {count: number}) {
         } as CartViewPayload);
       }}
     >
-      Cart <span aria-label={`(items: ${count})`}>{count}</span>
+      Cart <span aria-label={`(items: ${count})`}>({count})</span>
     </a>
   );
 }
@@ -188,57 +153,8 @@ function CartBanner() {
   return <CartBadge count={cart?.totalQuantity ?? 0} />;
 }
 
-const FALLBACK_HEADER_MENU = {
-  id: 'gid://shopify/Menu/199655587896',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461609500728',
-      resourceId: null,
-      tags: [],
-      title: 'Collections',
-      type: 'HTTP',
-      url: '/collections',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609533496',
-      resourceId: null,
-      tags: [],
-      title: 'Blog',
-      type: 'HTTP',
-      url: '/blogs/journal',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609566264',
-      resourceId: null,
-      tags: [],
-      title: 'Policies',
-      type: 'HTTP',
-      url: '/policies',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461609599032',
-      resourceId: 'gid://shopify/Page/92591030328',
-      tags: [],
-      title: 'About',
-      type: 'PAGE',
-      url: '/pages/about',
-      items: [],
-    },
-  ],
-};
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
+function activeLinkStyle({isPending}: {isActive: boolean; isPending: boolean}) {
   return {
-    textDecoration: isActive ? 'underline' : undefined,
     color: isPending ? 'grey' : 'var(--color-text)',
   };
 }

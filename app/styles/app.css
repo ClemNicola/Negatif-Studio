@@ -3,7 +3,7 @@
   --cart-aside-summary-height-with-discount: 300px;
   --cart-aside-summary-height: 250px;
   --grid-item-width: 355px;
-  --header-height: 64px;
+  --header-height: 80px;
   --color-dark: #000;
   --color-light: #fff;
 }
@@ -33,7 +33,6 @@ img {
 * --------------------------------------------------
 */
 .link:hover {
-  text-decoration: underline;
   cursor: pointer;
 }
 
@@ -80,11 +79,6 @@ img {
     background: rgba(0, 0, 0, 0.06);
     border-radius: 0.25rem;
     padding: 0.1em 0.3em;
-  }
-
-  a {
-    text-decoration: underline;
-    text-underline-offset: 6px;
   }
 }
 
@@ -231,7 +225,6 @@ button.reset:not(:has(> *)) {
 }
 
 button.reset:hover:not(:has(> *)) {
-  text-decoration: underline;
   cursor: pointer;
 }
 
