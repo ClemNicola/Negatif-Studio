@@ -30,6 +30,13 @@
   --underline-ease: cubic-bezier(0.6, 0, 0.3, 1);
 }
 
+@utility image-invert {
+  &:hover {
+    filter: invert(1);
+    transition: filter 0.2s ease-in-out;
+  }
+}
+
 @utility link-underline {
   position: relative;
 

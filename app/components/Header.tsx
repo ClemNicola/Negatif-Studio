@@ -5,27 +5,33 @@ import {
   useAnalytics,
   useOptimisticCart,
 } from '@shopify/hydrogen';
-import type {HeaderQuery, CartApiQueryFragment} from 'storefrontapi.generated';
+import type {
+  HeaderQuery,
+  CartApiQueryFragment,
+  PrintsMenuQuery,
+} from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
+import {DropDownMenu} from '~/components/DropDownMenu';
 
 interface HeaderProps {
   header: HeaderQuery;
   cart: Promise<CartApiQueryFragment | null>;
   isLoggedIn: Promise<boolean>;
+  printsMenu: Promise<PrintsMenuQuery | null>;
 }
 
 type Viewport = 'desktop' | 'mobile';
 
 const HEADER_NAV = [
-  {title: 'Prints', to: '/collections/all'},
-  {title: 'Studio', to: '/pages/studio'},
+  {title: 'Prints', to: '/collections/all', dropdown: true},
+  {title: 'Studio', to: '/pages/studio', dropdown: false},
 ] as const;
 
-export function Header({header, isLoggedIn, cart}: HeaderProps) {
+export function Header({header, isLoggedIn, cart, printsMenu}: HeaderProps) {
   const {shop} = header;
   return (
     <header className="header">
-      <HeaderMenu viewport="desktop" />
+      <HeaderMenu viewport="desktop" printsMenu={printsMenu} />
       <NavLink
         prefetch="intent"
         to="/"
@@ -39,7 +45,13 @@ export function Header({header, isLoggedIn, cart}: HeaderProps) {
   );
 }
 
-export function HeaderMenu({viewport}: {viewport: Viewport}) {
+export function HeaderMenu({
+  viewport,
+  printsMenu,
+}: {
+  viewport: Viewport;
+  printsMenu?: Promise<PrintsMenuQuery | null>;
+}) {
   const {close} = useAside();
 
   return (
@@ -47,19 +59,38 @@ export function HeaderMenu({viewport}: {viewport: Viewport}) {
       className={`header-menu-${viewport} font-clash-grotesk text-xl`}
       role="navigation"
     >
-      {HEADER_NAV.map((item) => (
-        <NavLink
-          className="header-menu-item link-underline"
-          end
-          key={item.to}
-          onClick={close}
-          prefetch="intent"
-          style={activeLinkStyle}
-          to={item.to}
-        >
-          {item.title}
-        </NavLink>
-      ))}
+      {HEADER_NAV.map((item) => {
+        const link = (
+          <NavLink
+            className="header-menu-item link-underline"
+            end
+            key={item.to}
+            onClick={close}
+            prefetch="intent"
+            style={activeLinkStyle}
+            to={item.to}
+          >
+            {item.title}
+          </NavLink>
+        );
+
+        if (!item.dropdown || viewport !== 'desktop' || !printsMenu) {
+          return link;
+        }
+
+        return (
+          <div key={item.to} className="header-prints-trigger">
+            {link}
+            <div className="header-prints-dropdown">
+              <Suspense fallback={null}>
+                <Await resolve={printsMenu}>
+                  {(menu) => <DropDownMenu menu={menu} onClose={close} />}
+                </Await>
+              </Suspense>
+            </div>
+          </div>
+        );
+      })}
     </nav>
   );
 }
