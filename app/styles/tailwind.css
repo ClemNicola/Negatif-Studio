@@ -26,4 +26,35 @@
   --font-clash-grotesk: 'Clash Grotesk', sans-serif;
   --color-text: #1d1d1f;
   --color-bg: #f5f5f5;
+  --button-slide-duration: 0.4s;
+  --button-slide-ease: cubic-bezier(0.6, 0, 0.3, 1);
+}
+
+/* Dark by default; the light background slides in from the left on hover. */
+@utility button-slide {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border: 1px solid var(--color-text);
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  transition: color var(--button-slide-duration) var(--button-slide-ease);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-color: var(--color-bg);
+    transform: translateX(-100%);
+    transition: transform var(--button-slide-duration) var(--button-slide-ease);
+  }
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &:hover::before {
+    transform: translateX(0);
+  }
 }
