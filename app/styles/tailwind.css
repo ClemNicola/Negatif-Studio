@@ -26,6 +26,8 @@
   --font-clash-grotesk: 'Clash Grotesk', sans-serif;
   --color-text: #1d1d1f;
   --color-bg: #f5f5f5;
+  --underline-duration: 0.3s;
+  --underline-ease: cubic-bezier(0.6, 0, 0.3, 1);
   --button-slide-duration: 0.4s;
   --button-slide-ease: cubic-bezier(0.6, 0, 0.3, 1);
 }
@@ -56,8 +58,9 @@
 
   &:hover::before {
     transform: translateX(0);
-  --underline-duration: 0.3s;
-  --underline-ease: cubic-bezier(0.6, 0, 0.3, 1);
+    --underline-duration: 0.3s;
+    --underline-ease: cubic-bezier(0.6, 0, 0.3, 1);
+  }
 }
 
 @utility image-invert {

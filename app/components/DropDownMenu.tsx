@@ -17,7 +17,7 @@ export function DropDownMenu({
   const featured = menu?.products.nodes[0];
 
   return (
-    <div className="flex items-start justify-between bg-bg px-12 py-6 font-clash-grotesk text-text">
+    <div className="flex items-start justify-between bg-bg px-20 py-6 font-clash-grotesk text-text">
       <nav className="flex flex-col gap-1.5 text-lg" aria-label="Prints">
         <Link
           to="/collections/all"
