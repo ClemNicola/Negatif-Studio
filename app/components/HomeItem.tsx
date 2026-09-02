@@ -7,7 +7,7 @@ import type {
 } from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
 
-export function ProductItem({
+export function HomeItem({
   product,
   loading,
 }: {
@@ -19,24 +19,31 @@ export function ProductItem({
   const image = product.featuredImage;
   return (
     <Link
-      className="product-item"
+      className="product-item "
       key={product.id}
       prefetch="intent"
       to={variantUrl}
     >
       {image && (
         <Image
+          className="hover:image-invert transition-all duration-300"
           alt={image.altText || product.title}
-          aspectRatio="1/1"
+          aspectRatio="9/12"
           data={image}
           loading={loading}
-          sizes="(min-width: 45em) 400px, 100vw"
+          sizes="(min-width: 45em) 500px, 100vw"
         />
       )}
-      <h4>{product.title}</h4>
-      <small>
-        <Money data={product.priceRange.minVariantPrice} />
-      </small>
+      <div className="flex justify-between">
+        <h4 className="self-start">{product.title}</h4>
+        <div className="flex items-center gap-2 text-sm font-clash-grotesk">
+          <span>from</span>
+          <Money
+            data={product.priceRange.minVariantPrice}
+            className="text-sm"
+          />
+        </div>
+      </div>
     </Link>
   );
 }

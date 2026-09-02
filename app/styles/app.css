@@ -261,7 +261,7 @@ button.reset:hover:not(:has(> *)) {
     align-items: center;
     align-self: stretch;
     grid-gap: 1rem;
-    margin-left: 2rem;
+    margin-left: 4rem;
   }
 }
 
@@ -305,7 +305,7 @@ button.reset:hover:not(:has(> *)) {
   display: flex;
   grid-gap: 1rem;
   margin-left: auto;
-  margin-right: 2rem;
+  margin-right: 4rem;
 }
 
 .header-ctas > * {
@@ -481,10 +481,6 @@ button.reset:hover:not(:has(> *)) {
   @media (min-width: 45em) {
     grid-template-columns: repeat(4, 1fr);
   }
-}
-
-.recommended-product img {
-  height: auto;
 }
 
 /*

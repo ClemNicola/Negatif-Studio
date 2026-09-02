@@ -2,40 +2,24 @@ import {Await, useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/_index';
 import {Suspense} from 'react';
 import {Image} from '@shopify/hydrogen';
-import type {
-  FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
-import {ProductItem} from '~/components/ProductItem';
+import type {RecommendedProductsQuery} from 'storefrontapi.generated';
+import {HomeItem} from '~/components/HomeItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
+import groceryStore2 from '~/assets/images/grocery-2.webp';
+import swimmer from '~/assets/images/swimmer.webp';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
 };
 
 export async function loader(args: Route.LoaderArgs) {
-  // Start fetching non-critical data without blocking time to first byte
+  // Nothing above the fold needs the Storefront API, so the page streams
+  // immediately and the products below resolve later.
   const deferredData = loadDeferredData(args);
 
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
-
-  return {...deferredData, ...criticalData};
-}
-
-/**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- */
-async function loadCriticalData({context}: Route.LoaderArgs) {
-  const [{collections}] = await Promise.all([
-    context.storefront.query(FEATURED_COLLECTION_QUERY),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
-
   return {
-    isShopLinked: Boolean(context.env.PUBLIC_STORE_DOMAIN),
-    featuredCollection: collections.nodes[0],
+    ...deferredData,
+    isShopLinked: Boolean(args.context.env.PUBLIC_STORE_DOMAIN),
   };
 }
 
@@ -61,37 +45,69 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
-    <div className="home">
+    <div className="px-16">
       {data.isShopLinked ? null : <MockShopNotice />}
-      <FeaturedCollection collection={data.featuredCollection} />
+      <HomePageHero />
       <RecommendedProducts products={data.recommendedProducts} />
+      <HomePageHero2 />
     </div>
   );
 }
 
-function FeaturedCollection({
-  collection,
-}: {
-  collection: FeaturedCollectionFragment;
-}) {
-  if (!collection) return null;
-  const image = collection?.image;
+function HomePageHero() {
   return (
-    <Link
-      className="featured-collection"
-      to={`/collections/${collection.handle}`}
-    >
-      {image && (
-        <div className="featured-collection-image">
-          <Image
-            data={image}
-            sizes="100vw"
-            alt={image.altText || collection.title}
-          />
-        </div>
-      )}
-      <h1>{collection.title}</h1>
-    </Link>
+    <section className="grid grid-cols-2 items-center mt-10">
+      <div className="flex flex-col gap-12">
+        <h1 className="text-8xl font-bold font-clash-display uppercase max-w-xl">
+          Light kept on films.
+        </h1>
+        <p className="text-2xl font-light font-clash-grotesk max-w-xl text-start">
+          Film photography, printed by hand in Paris. Every edition is exposed
+          on 35mm and limited to 10 prints.
+        </p>
+        <Link
+          to="/collections/all"
+          className="button-slide w-fit px-8 py-4 uppercase text-xl font-normal font-clash-grotesk"
+        >
+          Shop prints
+        </Link>
+      </div>
+      <Image
+        src={groceryStore2}
+        alt="Grocery Store 2"
+        className="aspect-9/16 object-cover"
+        style={{maxHeight: '550px', height: '100%'}}
+      />
+    </section>
+  );
+}
+
+function HomePageHero2() {
+  return (
+    <section className="grid grid-cols-2 gap-16 items-center">
+      <Image
+        src={swimmer}
+        alt="Swimmer"
+        className="aspect-9/16 object-cover"
+        style={{maxHeight: '550px', height: '100%'}}
+      />
+      <div className="flex flex-col gap-12">
+        <h1 className="text-5xl font-bold font-clash-display uppercase max-w-xl">
+          Shot on film, printed wet, never reprinted.
+        </h1>
+        <p className="text-2xl font-clash-grotesk max-w-xl font-lighttext-start">
+          Nothing is retouched. The grain, the dust and the light leaks stay
+          where they landed. When an edition closes, the negative is filed for
+          good.
+        </p>
+        <Link
+          to="/about"
+          className="button-slide w-fit px-8 py-4 uppercase text-xl font-normal font-clash-grotesk"
+        >
+          Inside the Studio
+        </Link>
+      </div>
+    </section>
   );
 }
 
@@ -102,19 +118,27 @@ function RecommendedProducts({
 }) {
   return (
     <section
-      className="recommended-products"
+      className="recommended-products my-10"
       aria-labelledby="recommended-products"
     >
-      <h2 id="recommended-products">Recommended Products</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-4xl font-bold font-clash-display uppercase pb-8">
+          Our Recommendations
+        </h2>
+        <Link
+          to="/collections/all"
+          className="link-underline uppercase text-base font-normal font-clash-grotesk"
+        >
+          View all
+        </Link>
+      </div>
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
-            <div className="recommended-products-grid">
-              {response
-                ? response.products.nodes.map((product) => (
-                    <ProductItem key={product.id} product={product} />
-                  ))
-                : null}
+            <div className="grid grid-cols-3 gap-8">
+              {response?.products?.nodes?.map((product) => (
+                <HomeItem key={product.id} product={product} />
+              ))}
             </div>
           )}
         </Await>
@@ -123,29 +147,6 @@ function RecommendedProducts({
     </section>
   );
 }
-
-const FEATURED_COLLECTION_QUERY = `#graphql
-  fragment FeaturedCollection on Collection {
-    id
-    title
-    image {
-      id
-      url
-      altText
-      width
-      height
-    }
-    handle
-  }
-  query FeaturedCollection($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    collections(first: 1, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...FeaturedCollection
-      }
-    }
-  }
-` as const;
 
 const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   fragment RecommendedProduct on Product {
@@ -168,7 +169,12 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+    products(
+      first: 3
+      query: "tag:Home"
+      sortKey: UPDATED_AT
+      reverse: true
+    ) {
       nodes {
         ...RecommendedProduct
       }
