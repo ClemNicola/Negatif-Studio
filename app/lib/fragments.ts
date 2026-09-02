@@ -228,6 +228,36 @@ export const HEADER_QUERY = `#graphql
   ${MENU_FRAGMENT}
 ` as const;
 
+export const PRINTS_MENU_QUERY = `#graphql
+  query PrintsMenu($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    collections(first: 10, sortKey: TITLE) {
+      nodes {
+        title
+        handle
+      }
+    }
+    products(first: 1, sortKey: UPDATED_AT, reverse: true) {
+      nodes {
+        title
+        handle
+        featuredImage {
+          url
+          altText
+          width
+          height
+        }
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+      }
+    }
+  }
+` as const;
+
 export const FOOTER_QUERY = `#graphql
   query Footer(
     $country: CountryCode

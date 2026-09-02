@@ -12,7 +12,7 @@ import {
 } from 'react-router';
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
-import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
+import {FOOTER_QUERY, HEADER_QUERY, PRINTS_MENU_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
@@ -135,10 +135,19 @@ function loadDeferredData({context}: Route.LoaderArgs) {
       console.error(error);
       return null;
     });
+  const printsMenu = storefront
+    .query(PRINTS_MENU_QUERY, {
+      cache: storefront.CacheLong(),
+    })
+    .catch((error: Error) => {
+      console.error(error);
+      return null;
+    });
   return {
     cart: cart.get(),
     isLoggedIn: customerAccount.isLoggedIn(),
     footer,
+    printsMenu,
   };
 }
 
