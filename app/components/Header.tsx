@@ -24,7 +24,7 @@ type Viewport = 'desktop' | 'mobile';
 
 const HEADER_NAV = [
   {title: 'Prints', to: '/collections/all', dropdown: true},
-  {title: 'Studio', to: '/pages/studio', dropdown: false},
+  {title: 'Studio', to: '/studio', dropdown: false},
 ] as const;
 
 export function Header({header, isLoggedIn, cart, printsMenu}: HeaderProps) {
