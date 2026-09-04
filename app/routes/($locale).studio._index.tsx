@@ -32,7 +32,7 @@ const PROCESS_STEPS = [
 
 export default function Studio() {
   return (
-    <div className="px-16">
+    <div className="px-16 mb-10">
       <StudioHero />
       <StudioProcess />
     </div>

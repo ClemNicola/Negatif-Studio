@@ -12,7 +12,7 @@ import {
 } from 'react-router';
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
-import {FOOTER_QUERY, HEADER_QUERY, PRINTS_MENU_QUERY} from '~/lib/fragments';
+import {HEADER_QUERY, PRINTS_MENU_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
@@ -122,31 +122,18 @@ async function loadCriticalData({context}: Route.LoaderArgs) {
 function loadDeferredData({context}: Route.LoaderArgs) {
   const {storefront, customerAccount, cart} = context;
 
-  // defer the footer query (below the fold)
-  const footer = storefront
-    .query(FOOTER_QUERY, {
+  const printsMenu = storefront
+    .query(PRINTS_MENU_QUERY, {
       cache: storefront.CacheLong(),
-      variables: {
-        footerMenuHandle: 'footer', // Adjust to your footer menu handle
-      },
     })
     .catch((error: Error) => {
       // Log query errors, but don't throw them so the page can still render
       console.error(error);
       return null;
     });
-  const printsMenu = storefront
-    .query(PRINTS_MENU_QUERY, {
-      cache: storefront.CacheLong(),
-    })
-    .catch((error: Error) => {
-      console.error(error);
-      return null;
-    });
   return {
     cart: cart.get(),
     isLoggedIn: customerAccount.isLoggedIn(),
-    footer,
     printsMenu,
   };
 }
