@@ -318,21 +318,24 @@ button.reset:hover:not(:has(> *)) {
 * --------------------------------------------------
 */
 .footer {
-  background: var(--color-dark);
+  border-top: 1px solid rgba(29, 29, 31, 0.15);
   margin-top: auto;
 }
 
-.footer-menu {
-  justify-content: center;
-  display: flex;
-  flex-wrap: wrap;
-  grid-gap: 1rem;
-  padding: 1rem;
+.footer-newsletter {
+  border-bottom: 1px solid var(--color-text);
+  padding-bottom: 0.5rem;
 }
 
-.footer-menu a {
-  color: var(--color-light);
-  min-width: fit-content;
+/* The global `input` reset is unlayered, so it beats Tailwind utilities here. */
+.footer-email {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  flex: 1;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
 }
 
 /*

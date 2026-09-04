@@ -44,7 +44,7 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
-    <div className="px-16">
+    <div className="px-16 mb-10">
       {data.isShopLinked ? null : <MockShopNotice />}
       <HomePageHero />
       <RecommendedProducts products={data.recommendedProducts} />

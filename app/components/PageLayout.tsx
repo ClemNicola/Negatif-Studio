@@ -2,7 +2,6 @@ import {Await, Link} from 'react-router';
 import {Suspense, useId} from 'react';
 import type {
   CartApiQueryFragment,
-  FooterQuery,
   HeaderQuery,
   PrintsMenuQuery,
 } from 'storefrontapi.generated';
@@ -18,7 +17,6 @@ import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
-  footer: Promise<FooterQuery | null>;
   header: HeaderQuery;
   isLoggedIn: Promise<boolean>;
   publicStoreDomain: string;
@@ -29,10 +27,8 @@ interface PageLayoutProps {
 export function PageLayout({
   cart,
   children = null,
-  footer,
   header,
   isLoggedIn,
-  publicStoreDomain,
   printsMenu,
 }: PageLayoutProps) {
   return (
@@ -49,11 +45,7 @@ export function PageLayout({
         />
       )}
       <main>{children}</main>
-      <Footer
-        footer={footer}
-        header={header}
-        publicStoreDomain={publicStoreDomain}
-      />
+      <Footer />
     </Aside.Provider>
   );
 }

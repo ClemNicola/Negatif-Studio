@@ -1,129 +1,77 @@
-import {Suspense} from 'react';
-import {Await, NavLink} from 'react-router';
-import type {FooterQuery, HeaderQuery} from 'storefrontapi.generated';
+import {NavLink} from 'react-router';
 
-interface FooterProps {
-  footer: Promise<FooterQuery | null>;
-  header: HeaderQuery;
-  publicStoreDomain: string;
-}
+const FOOTER_NAV = [
+  {
+    title: 'Shop',
+    links: [
+      {label: 'All prints', to: '/collections/all'},
+      {label: 'Shipping & returns', to: '/policies/shipping-policy'},
+    ],
+  },
+  {
+    title: 'Studio',
+    links: [
+      {label: 'About', to: '/studio'},
+      {label: 'Contact', to: '/pages/contact'},
+    ],
+  },
+] as const;
 
-export function Footer({
-  footer: footerPromise,
-  header,
-  publicStoreDomain,
-}: FooterProps) {
+export function Footer() {
   return (
-    <Suspense>
-      <Await resolve={footerPromise}>
-        {(footer) => (
-          <footer className="footer">
-            {footer?.menu && header.shop.primaryDomain?.url && (
-              <FooterMenu
-                menu={footer.menu}
-                primaryDomainUrl={header.shop.primaryDomain.url}
-                publicStoreDomain={publicStoreDomain}
-              />
-            )}
-          </footer>
-        )}
-      </Await>
-    </Suspense>
+    <footer className="footer font-clash-grotesk mt-20">
+      <div className="flex items-start justify-between gap-16 px-16 py-16">
+        <div className="flex gap-24">
+          {FOOTER_NAV.map((column) => (
+            <nav
+              key={column.title}
+              className="flex flex-col gap-3"
+              aria-label={column.title}
+            >
+              <p className="text-sm text-neutral-400">{column.title}</p>
+              {column.links.map((link) => (
+                <NavLink
+                  key={link.to}
+                  to={link.to}
+                  prefetch="intent"
+                  className="link-underline w-fit text-base"
+                >
+                  {link.label}
+                </NavLink>
+              ))}
+            </nav>
+          ))}
+        </div>
+
+        <Newsletter />
+      </div>
+    </footer>
   );
 }
 
-function FooterMenu({
-  menu,
-  primaryDomainUrl,
-  publicStoreDomain,
-}: {
-  menu: FooterQuery['menu'];
-  primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
-  publicStoreDomain: string;
-}) {
+function Newsletter() {
   return (
-    <nav className="footer-menu" role="navigation">
-      {(menu || FALLBACK_FOOTER_MENU).items.map((item) => {
-        if (!item.url) return null;
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        const isExternal = !url.startsWith('/');
-        return isExternal ? (
-          <a href={url} key={item.id} rel="noopener noreferrer" target="_blank">
-            {item.title}
-          </a>
-        ) : (
-          <NavLink
-            end
-            key={item.id}
-            prefetch="intent"
-            style={activeLinkStyle}
-            to={url}
-          >
-            {item.title}
-          </NavLink>
-        );
-      })}
-    </nav>
+    <div className="flex w-80 flex-col gap-3">
+      <p className="text-sm">One letter per edition</p>
+      <form className="footer-newsletter flex items-center gap-4">
+        <label className="sr-only" htmlFor="footer-email">
+          Email
+        </label>
+        <input
+          className="footer-email text-base"
+          id="footer-email"
+          name="email"
+          type="email"
+          placeholder="Email"
+          required
+        />
+        <button className="reset text-sm uppercase" type="submit">
+          Join
+        </button>
+      </form>
+      <p className="text-sm text-neutral-400">
+        © {new Date().getFullYear()} Negatif Studio — Paris
+      </p>
+    </div>
   );
-}
-
-const FALLBACK_FOOTER_MENU = {
-  id: 'gid://shopify/Menu/199655620664',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461633060920',
-      resourceId: 'gid://shopify/ShopPolicy/23358046264',
-      tags: [],
-      title: 'Privacy Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/privacy-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633093688',
-      resourceId: 'gid://shopify/ShopPolicy/23358013496',
-      tags: [],
-      title: 'Refund Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/refund-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633126456',
-      resourceId: 'gid://shopify/ShopPolicy/23358111800',
-      tags: [],
-      title: 'Shipping Policy',
-      type: 'SHOP_POLICY',
-      url: '/policies/shipping-policy',
-      items: [],
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633159224',
-      resourceId: 'gid://shopify/ShopPolicy/23358079032',
-      tags: [],
-      title: 'Terms of Service',
-      type: 'SHOP_POLICY',
-      url: '/policies/terms-of-service',
-      items: [],
-    },
-  ],
-};
-
-function activeLinkStyle({
-  isActive,
-  isPending,
-}: {
-  isActive: boolean;
-  isPending: boolean;
-}) {
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'white',
-  };
 }
