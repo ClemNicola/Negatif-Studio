@@ -1,7 +1,6 @@
 import {Await, useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/_index';
 import {Suspense} from 'react';
-import {Image} from '@shopify/hydrogen';
 import type {RecommendedProductsQuery} from 'storefrontapi.generated';
 import {HomeItem} from '~/components/HomeItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
@@ -72,10 +71,11 @@ function HomePageHero() {
           Shop prints
         </Link>
       </div>
-      <Image
+      <img
         src={groceryStore2}
-        alt="Grocery Store 2"
-        className="aspect-9/16 object-cover"
+        alt="Customers at a corner grocery store, shot on 35mm film"
+        decoding="async"
+        className="aspect-9/16 w-full object-cover"
         style={{maxHeight: '550px', height: '100%'}}
       />
     </section>
@@ -85,10 +85,12 @@ function HomePageHero() {
 function HomePageHero2() {
   return (
     <section className="grid grid-cols-2 gap-16 items-center">
-      <Image
+      <img
         src={swimmer}
-        alt="Swimmer"
-        className="aspect-9/16 object-cover"
+        alt="A lone swimmer in open water"
+        loading="lazy"
+        decoding="async"
+        className="aspect-9/16 w-full object-cover"
         style={{maxHeight: '550px', height: '100%'}}
       />
       <div className="flex flex-col gap-12">
@@ -101,7 +103,7 @@ function HomePageHero2() {
           good.
         </p>
         <Link
-          to="/about"
+          to="/studio"
           className="button-slide w-fit px-8 py-4 uppercase text-xl font-normal font-clash-grotesk"
         >
           Inside the Studio
