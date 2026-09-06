@@ -117,7 +117,7 @@ function HeaderCtas({
   cart,
 }: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
   return (
-    <nav className="header-ctas font-clash-grotesk text-xl" role="navigation">
+    <nav className="header-ctas  font-clash-grotesk text-xl" role="navigation">
       <HeaderMenuMobileToggle />
       <Suspense fallback={null}>
         <Await resolve={isLoggedIn} errorElement={null}>
@@ -156,7 +156,7 @@ function HeaderMenuMobileToggle() {
 function SearchToggle() {
   const {open} = useAside();
   return (
-    <button className="reset" onClick={() => open('search')}>
+    <button className="reset link-underline" onClick={() => open('search')}>
       Search
     </button>
   );
@@ -168,6 +168,7 @@ function CartBadge({count}: {count: number}) {
 
   return (
     <a
+      className="link-underline"
       href="/cart"
       onClick={(e) => {
         e.preventDefault();
