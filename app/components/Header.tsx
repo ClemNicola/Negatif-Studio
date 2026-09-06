@@ -1,4 +1,4 @@
-import {Suspense} from 'react';
+import {Suspense, useState, type MouseEvent} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
 import {
   type CartViewPayload,
@@ -53,6 +53,15 @@ export function HeaderMenu({
   printsMenu?: Promise<PrintsMenuQuery | null>;
 }) {
   const {close} = useAside();
+  const [isDropdownDismissed, setIsDropdownDismissed] = useState(false);
+
+  const handleDropdownClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    close();
+    if (event.detail > 0) {
+      event.currentTarget.blur();
+      setIsDropdownDismissed(true);
+    }
+  };
 
   return (
     <nav
@@ -79,12 +88,20 @@ export function HeaderMenu({
         }
 
         return (
-          <div key={item.to} className="header-prints-trigger">
+          <div
+            key={item.to}
+            className={`header-prints-trigger${
+              isDropdownDismissed ? ' is-dismissed' : ''
+            }`}
+            onMouseEnter={() => setIsDropdownDismissed(false)}
+          >
             {link}
             <div className="header-prints-dropdown">
               <Suspense fallback={null}>
                 <Await resolve={printsMenu}>
-                  {(menu) => <DropDownMenu menu={menu} onClose={close} />}
+                  {(menu) => (
+                    <DropDownMenu menu={menu} onClose={handleDropdownClick} />
+                  )}
                 </Await>
               </Suspense>
             </div>

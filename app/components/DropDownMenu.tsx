@@ -1,3 +1,4 @@
+import type {MouseEvent} from 'react';
 import {Link} from 'react-router';
 import {Image, Money} from '@shopify/hydrogen';
 import type {PrintsMenuQuery} from 'storefrontapi.generated';
@@ -9,7 +10,7 @@ export function DropDownMenu({
   onClose,
 }: {
   menu: PrintsMenuQuery | null;
-  onClose: () => void;
+  onClose: (event: MouseEvent<HTMLAnchorElement>) => void;
 }) {
   const collections = (menu?.collections.nodes ?? []).filter(
     (collection) => !HIDDEN_COLLECTIONS.includes(collection.handle),
