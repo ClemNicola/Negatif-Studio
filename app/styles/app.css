@@ -280,8 +280,8 @@ button.reset:hover:not(:has(> *)) {
   visibility: hidden;
   pointer-events: none;
   transition:
-    opacity 160ms ease,
-    visibility 160ms ease;
+    opacity 300ms ease,
+    visibility 300ms ease;
 }
 
 .header-prints-trigger:hover .header-prints-dropdown,
@@ -289,6 +289,12 @@ button.reset:hover:not(:has(> *)) {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+}
+
+.header-prints-trigger.is-dismissed .header-prints-dropdown {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .header-prints-trigger:hover > .link-underline::after,
