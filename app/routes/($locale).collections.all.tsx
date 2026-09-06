@@ -5,6 +5,7 @@ import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {ProductItem} from '~/components/ProductItem';
 import {CollectionsNav} from '~/components/CollectionsNav';
 import {COLLECTIONS_NAV_QUERY} from '~/lib/fragments';
+import {getCatalogSort, getSortValue} from '~/lib/sort';
 import type {CollectionItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = () => {
@@ -27,10 +28,11 @@ async function loadCriticalData({context, request}: Route.LoaderArgs) {
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 9,
   });
+  const {sortKey, reverse} = getCatalogSort(getSortValue(request));
 
   const [catalog, {collections}] = await Promise.all([
     storefront.query(CATALOG_QUERY, {
-      variables: {...paginationVariables},
+      variables: {...paginationVariables, sortKey, reverse},
     }),
     storefront.query(COLLECTIONS_NAV_QUERY, {
       cache: storefront.CacheLong(),
@@ -110,8 +112,10 @@ const CATALOG_QUERY = `#graphql
     $last: Int
     $startCursor: String
     $endCursor: String
+    $sortKey: ProductSortKeys
+    $reverse: Boolean
   ) @inContext(country: $country, language: $language) {
-    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {
+    products(first: $first, last: $last, before: $startCursor, after: $endCursor, sortKey: $sortKey, reverse: $reverse) {
       nodes {
         ...CollectionItem
       }

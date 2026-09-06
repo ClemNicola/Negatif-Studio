@@ -6,6 +6,7 @@ import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ProductItem} from '~/components/ProductItem';
 import {CollectionsNav} from '~/components/CollectionsNav';
 import {COLLECTIONS_NAV_QUERY} from '~/lib/fragments';
+import {getCollectionSort, getSortValue} from '~/lib/sort';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -32,6 +33,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 8,
   });
+  const {sortKey, reverse} = getCollectionSort(getSortValue(request));
 
   if (!handle) {
     throw redirect('/collections');
@@ -39,7 +41,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
 
   const [{collection}, {collections}] = await Promise.all([
     storefront.query(COLLECTION_QUERY, {
-      variables: {handle, ...paginationVariables},
+      variables: {handle, ...paginationVariables, sortKey, reverse},
       // Add other queries here, so that they are loaded in parallel
     }),
     storefront.query(COLLECTIONS_NAV_QUERY, {
@@ -142,6 +144,8 @@ export const COLLECTION_QUERY = `#graphql
     $last: Int
     $startCursor: String
     $endCursor: String
+    $sortKey: ProductCollectionSortKeys
+    $reverse: Boolean
   ) @inContext(country: $country, language: $language) {
     collection(handle: $handle) {
       id
@@ -152,7 +156,9 @@ export const COLLECTION_QUERY = `#graphql
         first: $first,
         last: $last,
         before: $startCursor,
-        after: $endCursor
+        after: $endCursor,
+        sortKey: $sortKey,
+        reverse: $reverse
       ) {
         nodes {
           ...ProductItem
