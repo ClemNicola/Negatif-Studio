@@ -1,9 +1,11 @@
 import {redirect, useLoaderData} from 'react-router';
-import type {Route} from './+types/collections.$handle';
+import type {Route} from './+types/($locale).collections.$handle';
 import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {PaginatedResourceSection} from '~/components/PaginatedResourceSection';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 import {ProductItem} from '~/components/ProductItem';
+import {CollectionsNav} from '~/components/CollectionsNav';
+import {COLLECTIONS_NAV_QUERY} from '~/lib/fragments';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -35,10 +37,13 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
     throw redirect('/collections');
   }
 
-  const [{collection}] = await Promise.all([
+  const [{collection}, {collections}] = await Promise.all([
     storefront.query(COLLECTION_QUERY, {
       variables: {handle, ...paginationVariables},
       // Add other queries here, so that they are loaded in parallel
+    }),
+    storefront.query(COLLECTIONS_NAV_QUERY, {
+      cache: storefront.CacheLong(),
     }),
   ]);
 
@@ -53,6 +58,7 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
 
   return {
     collection,
+    collections: collections.nodes,
   };
 }
 
@@ -66,12 +72,14 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 }
 
 export default function Collection() {
-  const {collection} = useLoaderData<typeof loader>();
+  const {collection, collections} = useLoaderData<typeof loader>();
 
   return (
-    <div className="collection">
-      <h1>{collection.title}</h1>
-      <p className="collection-description">{collection.description}</p>
+    <div className="px-16 my-10">
+      <h1 className="text-5xl font-bold font-clash-display uppercase max-w-2xl">
+        Prints - {collection.title}
+      </h1>
+      <CollectionsNav collections={collections} />
       <PaginatedResourceSection<ProductItemFragment>
         connection={collection.products}
         resourcesClassName="products-grid"
@@ -124,7 +132,7 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
 ` as const;
 
 // NOTE: https://shopify.dev/docs/api/storefront/2022-04/objects/collection
-const COLLECTION_QUERY = `#graphql
+export const COLLECTION_QUERY = `#graphql
   ${PRODUCT_ITEM_FRAGMENT}
   query Collection(
     $handle: String!
