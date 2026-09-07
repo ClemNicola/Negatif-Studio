@@ -228,6 +228,19 @@ export const HEADER_QUERY = `#graphql
   ${MENU_FRAGMENT}
 ` as const;
 
+export const COLLECTIONS_NAV_QUERY = `#graphql
+  query CollectionsNav($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    collections(first: 10, sortKey: TITLE) {
+      nodes {
+        id
+        title
+        handle
+      }
+    }
+  }
+` as const;
+
 export const PRINTS_MENU_QUERY = `#graphql
   query PrintsMenu($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {

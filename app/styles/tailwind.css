@@ -63,6 +63,16 @@
   }
 }
 
+@utility slide-reveal {
+  transform: translateX(-100%);
+  transition: transform var(--button-slide-duration) var(--button-slide-ease);
+
+  .group:hover &,
+  .group:focus-visible & {
+    transform: translateX(0);
+  }
+}
+
 @utility image-invert {
   &:hover {
     filter: invert(1);
@@ -87,7 +97,7 @@
   &:hover::after {
     transform: scaleX(1);
   }
-  &[aria-current='page']::after {
+  &[aria-current]:not([aria-current='false'])::after {
     transform: scaleX(1);
     transition: none;
   }
