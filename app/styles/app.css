@@ -552,12 +552,15 @@ button.reset:hover:not(:has(> *)) {
 
 .product-image img {
   height: auto;
+  padding-bottom: 1rem;
   width: 100%;
 }
 
 .product-main {
   align-self: start;
   position: sticky;
+  top: 8rem;
+  z-index: 1;
 }
 
 .product-price-on-sale {

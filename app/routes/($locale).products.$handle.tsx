@@ -92,7 +92,7 @@ export default function Product() {
       <div className="product-main">
         <h1 className="text-4xl font-bold font-clash-display">{title}</h1>
         <div
-          className="font-clash-grotesk text-xl font-light my-6 max-w-xl"
+          className="font-clash-grotesk text-lg font-light my-4 max-w-xl"
           dangerouslySetInnerHTML={{__html: descriptionHtml}}
         />
         <ProductForm
