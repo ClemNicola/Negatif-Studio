@@ -270,4 +270,3 @@ export const PRINTS_MENU_QUERY = `#graphql
     }
   }
 ` as const;
-
