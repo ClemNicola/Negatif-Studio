@@ -1,23 +1,27 @@
-import type {ProductVariantFragment} from 'storefrontapi.generated';
+import type {ProductFragment} from 'storefrontapi.generated';
 import {Image} from '@shopify/hydrogen';
 
 export function ProductImage({
-  image,
+  media,
 }: {
-  image: ProductVariantFragment['image'];
+  media: ProductFragment['media']['nodes'];
 }) {
-  if (!image) {
+  if (!media) {
     return <div className="product-image" />;
   }
+
   return (
     <div className="product-image">
-      <Image
-        alt={image.altText || 'Product Image'}
-        aspectRatio="1/1"
-        data={image}
-        key={image.id}
-        sizes="(min-width: 45em) 50vw, 100vw"
-      />
+      {media.map((node) =>
+        node.__typename === 'MediaImage' && node.image ? (
+          <Image
+            alt={node.alt || 'Product Image'}
+            data={node.image}
+            key={node.id}
+            sizes="(min-width: 45em) 50vw, 100vw"
+          />
+        ) : null,
+      )}
     </div>
   );
 }

@@ -88,7 +88,7 @@ export default function Product() {
 
   return (
     <div className="product px-16 my-10">
-      <ProductImage image={selectedVariant?.image} />
+      <ProductImage media={product.media.nodes} />
       <div className="product-main">
         <h1 className="text-4xl font-bold font-clash-display">{title}</h1>
         <div
@@ -192,6 +192,27 @@ const PRODUCT_FRAGMENT = `#graphql
     seo {
       description
       title
+    }
+    media (first: 3){
+      nodes {
+        __typename
+        id
+        alt
+        mediaContentType
+        previewImage{
+          url
+          width
+          height
+        }
+        ... on MediaImage {
+          image {
+          id
+          url
+          width
+          height
+          }
+        }
+      }
     }
   }
   ${PRODUCT_VARIANT_FRAGMENT}
