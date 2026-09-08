@@ -8,18 +8,11 @@ import {AddToCartButton} from './AddToCartButton';
 import {useAside} from './Aside';
 import type {ProductFragment} from 'storefrontapi.generated';
 
-const optionItemClassName = ({
-  selected,
-  exists,
-}: {
-  selected: boolean;
-  exists: boolean;
-}) =>
-  `cursor-pointer flex w-full items-center justify-between gap-4 px-6 py-5 text-left text-lg transition-colors duration-300 ${
-    selected
-      ? 'bg-text text-bg'
-      : 'bg-text/5 text-text hover:bg-text/10 disabled:hover:bg-text/5'
-  }${exists ? '' : ' opacity-30 cursor-not-allowed line-through'}`;
+// The selected state is driven by data-selected so it can transition both ways.
+const optionItemClassName = ({exists}: {exists: boolean}) =>
+  `button-slide-invert bg-text/5 flex w-full cursor-pointer items-center justify-between gap-4 px-6 py-5 text-left text-lg${
+    exists ? '' : ' opacity-30 cursor-not-allowed line-through'
+  }`;
 
 export function ProductForm({
   productOptions,
@@ -72,7 +65,7 @@ export function ProductForm({
                     </span>
                     {variant?.price && !hidePrice ? (
                       <Money
-                        className="text-base opacity-60"
+                        className="text-base tex-text/75"
                         data={variant.price}
                       />
                     ) : null}
@@ -82,7 +75,8 @@ export function ProductForm({
                 if (isDifferentProduct) {
                   return (
                     <Link
-                      className={optionItemClassName({selected, exists})}
+                      className={optionItemClassName({exists})}
+                      data-selected={selected}
                       key={option.name + name}
                       prefetch="intent"
                       preventScrollReset
@@ -98,7 +92,8 @@ export function ProductForm({
                 return (
                   <button
                     type="button"
-                    className={optionItemClassName({selected, exists})}
+                    className={optionItemClassName({exists})}
+                    data-selected={selected}
                     key={option.name + name}
                     style={{opacity: available ? undefined : 0.3}}
                     disabled={!exists}
