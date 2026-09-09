@@ -1,7 +1,5 @@
 :root {
-  --aside-width: 400px;
-  --cart-aside-summary-height-with-discount: 300px;
-  --cart-aside-summary-height: 250px;
+  --aside-width: 480px;
   --grid-item-width: 355px;
   --header-height: 80px;
   --color-dark: #000;
@@ -92,6 +90,8 @@
 aside {
   background: var(--color-light);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
   height: 100vh;
   width: min(var(--aside-width), 100vw);
   position: fixed;
@@ -102,27 +102,15 @@ aside {
 
 aside header {
   align-items: center;
-  border-bottom: 1px solid var(--color-dark);
   display: flex;
   height: var(--header-height);
   justify-content: space-between;
-  padding: 0 20px;
+  /* Matches `aside main` so the heading lines up with the content below. */
+  padding: 0 2rem;
 }
 
 aside header h3 {
   margin: 0;
-}
-
-aside header .close {
-  font-weight: bold;
-  opacity: 0.8;
-  text-decoration: none;
-  transition: all 200ms;
-  width: 20px;
-}
-
-aside header .close:hover {
-  opacity: 1;
 }
 
 aside header h2 {
@@ -131,6 +119,10 @@ aside header h2 {
 }
 
 aside main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
   margin: 1rem;
 }
 
@@ -170,7 +162,8 @@ aside li {
   transition: opacity 400ms ease-in-out;
   transition: opacity 400ms;
   visibility: hidden;
-  z-index: 10;
+  /* Above the sticky header, which also sits at 10. */
+  z-index: 20;
 }
 
 .overlay .close-outside {
@@ -349,46 +342,21 @@ button.reset:hover:not(:has(> *)) {
 * components/Cart
 * --------------------------------------------------
 */
-.cart-main {
-  height: 100%;
-  max-height: calc(100vh - var(--cart-aside-summary-height));
-  overflow-y: auto;
-  width: auto;
+.cart-main,
+.cart-details {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
 }
 
-.cart-main.with-discount {
-  max-height: calc(100vh - var(--cart-aside-summary-height-with-discount));
-}
-
+/* Neutralises the global `aside li` and `li` margins. */
 .cart-line {
-  padding: 0.75rem 0;
+  margin-bottom: 0;
 }
 
-.cart-line-inner {
-  display: flex;
-}
-
-.cart-line img {
-  height: 100%;
-  display: block;
-  margin-right: 0.75rem;
-}
-
-.cart-summary-page {
-  position: relative;
-}
-
-.cart-summary-aside {
-  background: white;
-  border-top: 1px solid var(--color-dark);
-  bottom: 0;
-  padding-top: 0.75rem;
-  position: absolute;
-  width: calc(var(--aside-width) - 40px);
-}
-
-.cart-line-quantity {
-  display: flex;
+.cart-line:last-child {
+  border-bottom: 0;
 }
 
 /* Child line components (warranties, gift wrapping, etc.) */

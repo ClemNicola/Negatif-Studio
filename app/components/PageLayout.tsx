@@ -1,4 +1,5 @@
-import {Await, Link} from 'react-router';
+import {Await, Link, useAsyncValue} from 'react-router';
+import {useOptimisticCart} from '@shopify/hydrogen';
 import {Suspense, useId} from 'react';
 import type {
   CartApiQueryFragment,
@@ -52,7 +53,16 @@ export function PageLayout({
 
 function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
   return (
-    <Aside type="cart" heading="CART">
+    <Aside
+      type="cart"
+      heading={
+        <Suspense fallback="Cart">
+          <Await resolve={cart} errorElement="Cart">
+            <CartAsideHeading />
+          </Await>
+        </Suspense>
+      }
+    >
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
           {(cart) => {
@@ -62,6 +72,12 @@ function CartAside({cart}: {cart: PageLayoutProps['cart']}) {
       </Suspense>
     </Aside>
   );
+}
+
+function CartAsideHeading() {
+  const originalCart = useAsyncValue() as CartApiQueryFragment | null;
+  const cart = useOptimisticCart(originalCart);
+  return <>Cart ({cart?.totalQuantity ?? 0})</>;
 }
 
 function SearchAside() {
