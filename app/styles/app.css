@@ -97,7 +97,7 @@ aside {
   position: fixed;
   right: calc(-1 * var(--aside-width));
   top: 0;
-  transition: transform 200ms ease-in-out;
+  transition: transform 300ms ease-in-out;
 }
 
 aside header {
@@ -105,7 +105,6 @@ aside header {
   display: flex;
   height: var(--header-height);
   justify-content: space-between;
-  /* Matches `aside main` so the heading lines up with the content below. */
   padding: 0 2rem;
 }
 
@@ -159,8 +158,9 @@ aside li {
   position: fixed;
   right: 0;
   top: 0;
-  transition: opacity 400ms ease-in-out;
-  transition: opacity 400ms;
+  transition:
+    opacity 300ms ease-in-out,
+    visibility 0s linear 300ms;
   visibility: hidden;
   /* Above the sticky header, which also sits at 10. */
   z-index: 20;
@@ -191,6 +191,9 @@ aside li {
 .overlay.expanded {
   opacity: 1;
   pointer-events: auto;
+  transition:
+    opacity 300ms ease-in-out,
+    visibility 0s;
   visibility: visible;
 }
 /* reveal aside */

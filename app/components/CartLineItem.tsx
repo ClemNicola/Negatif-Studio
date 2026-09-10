@@ -7,7 +7,8 @@ import {
   type OptimisticCartLine,
 } from '@shopify/hydrogen';
 import {useVariantUrl} from '~/lib/variants';
-import {Link} from 'react-router';
+import {getOptimisticLineTotal} from '~/lib/cart';
+import {Link, useFetchers} from 'react-router';
 import {useAside} from './Aside';
 import type {CartApiQueryFragment} from 'storefrontapi.generated';
 
@@ -16,12 +17,6 @@ export type CartLine = OptimisticCartLine<CartApiQueryFragment>;
 const stepperButtonClassName =
   'cursor-pointer px-1 text-lg leading-none text-text/50 transition-colors hover:text-text disabled:cursor-not-allowed disabled:opacity-30';
 
-/**
- * A single line item in the cart. It displays the product image, title, price.
- * It also provides controls to update the quantity or remove the line item.
- * If the line is a parent line that has child components (like warranties or gift wrapping), they are
- * rendered nested below the parent line.
- */
 export function CartLineItem({
   layout,
   line,
@@ -35,8 +30,13 @@ export function CartLineItem({
   const {product, title, image, selectedOptions} = merchandise;
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions);
   const {close} = useAside();
+  const isPending = useIsLinePending(line);
   const lineItemChildren = childrenMap[id];
   const childrenLabelId = `cart-line-children-${id}`;
+  // While a mutation is in flight, `cost` still describes the previous quantity.
+  const lineTotal =
+    (isPending ? getOptimisticLineTotal(line) : undefined) ??
+    line.cost?.totalAmount;
 
   // Shopify adds a "Title: Default Title" option to products without variants.
   const optionsLabel = selectedOptions
@@ -79,8 +79,8 @@ export function CartLineItem({
 
           <div className="mt-auto flex items-center justify-between pt-3">
             <CartLineQuantity line={line} />
-            {line?.cost?.totalAmount ? (
-              <Money className="text-base" data={line.cost.totalAmount} />
+            {lineTotal ? (
+              <Money className="text-base" data={lineTotal} />
             ) : null}
           </div>
         </div>
@@ -104,6 +104,18 @@ export function CartLineItem({
         </div>
       ) : null}
     </li>
+  );
+}
+
+function useIsLinePending(line: CartLine) {
+  const fetchers = useFetchers();
+  const updateKey = getUpdateKey([line.id]);
+
+  return (
+    Boolean(line.isOptimistic) ||
+    fetchers.some(
+      (fetcher) => fetcher.key === updateKey && fetcher.state !== 'idle',
+    )
   );
 }
 
