@@ -14,16 +14,6 @@ type AsideContextValue = {
   close: () => void;
 };
 
-/**
- * A side bar component with Overlay
- * @example
- * ```jsx
- * <Aside type="search" heading="SEARCH">
- *  <input type="search" />
- *  ...
- * </Aside>
- * ```
- */
 export function Aside({
   children,
   heading,
@@ -63,9 +53,17 @@ export function Aside({
       <button className="close-outside" onClick={close} />
       <aside>
         <header>
-          <h3 id={id}>{heading}</h3>
-          <button className="close reset" onClick={close} aria-label="Close">
-            &times;
+          <h3
+            id={id}
+            className="font-clash-display text-2xl font-bold uppercase tracking-wide"
+          >
+            {heading}
+          </h3>
+          <button
+            className="link-underline cursor-pointer text-base"
+            onClick={close}
+          >
+            Close
           </button>
         </header>
         <main>{children}</main>

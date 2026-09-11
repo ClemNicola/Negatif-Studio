@@ -55,7 +55,7 @@ export function ProductForm({
                 const hidePrice =
                   option.name &&
                   option.name.trim().toLowerCase() === 'finition' &&
-                  name.trim().toLowerCase() === 'non encadré';
+                  name.trim().toLowerCase() === 'unframed';
 
                 const content = (
                   <>
