@@ -12,6 +12,7 @@ import type {
 } from 'storefrontapi.generated';
 import {useAside} from '~/components/Aside';
 import {DropDownMenu} from '~/components/DropDownMenu';
+import {MobileHeader} from '~/components/MobileHeader';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -30,18 +31,21 @@ const HEADER_NAV = [
 export function Header({header, isLoggedIn, cart, printsMenu}: HeaderProps) {
   const {shop} = header;
   return (
-    <header className="header">
-      <HeaderMenu viewport="desktop" printsMenu={printsMenu} />
-      <NavLink
-        prefetch="intent"
-        to="/"
-        className="text-3xl font-extrabold font-clash-display tracking-wider"
-        end
-      >
-        {shop.name}
-      </NavLink>
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
-    </header>
+    <>
+      <header className="header">
+        <HeaderMenu viewport="desktop" printsMenu={printsMenu} />
+        <NavLink
+          prefetch="intent"
+          to="/"
+          className="text-3xl font-extrabold font-clash-display tracking-wider uppercase"
+          end
+        >
+          {shop.name}
+        </NavLink>
+        <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+      </header>
+      <MobileHeader shop={shop} cart={cart} printsMenu={printsMenu} />
+    </>
   );
 }
 
@@ -118,7 +122,6 @@ function HeaderCtas({
 }: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
   return (
     <nav className="header-ctas  font-clash-grotesk text-xl" role="navigation">
-      <HeaderMenuMobileToggle />
       <Suspense fallback={null}>
         <Await resolve={isLoggedIn} errorElement={null}>
           {(isLoggedIn) =>
@@ -138,18 +141,6 @@ function HeaderCtas({
       <SearchToggle />
       <CartToggle cart={cart} />
     </nav>
-  );
-}
-
-function HeaderMenuMobileToggle() {
-  const {open} = useAside();
-  return (
-    <button
-      className="header-menu-mobile-toggle reset"
-      onClick={() => open('mobile')}
-    >
-      <h3>☰</h3>
-    </button>
   );
 }
 
