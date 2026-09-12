@@ -44,7 +44,7 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
-    <div className="px-16 mb-10">
+    <div className="mb-10 md:px-16">
       {data.isShopLinked ? null : <MockShopNotice />}
       <HomePageHero />
       <RecommendedProducts products={data.recommendedProducts} />
@@ -55,18 +55,18 @@ export default function Homepage() {
 
 function HomePageHero() {
   return (
-    <section className="grid grid-cols-2 items-center mt-10">
-      <div className="flex flex-col gap-12">
-        <h1 className="text-8xl font-bold font-clash-display uppercase max-w-xl">
+    <section className="mt-6 grid gap-8 md:mt-10 md:grid-cols-2 md:items-center md:gap-0">
+      <div className="flex flex-col gap-6 md:gap-12">
+        <h1 className="text-5xl md:text-8xl font-bold font-clash-display uppercase max-w-xl">
           Light kept on films.
         </h1>
-        <p className="text-2xl font-light font-clash-grotesk max-w-xl text-start">
+        <p className="text-lg md:text-2xl font-light font-clash-grotesk max-w-xl text-start">
           Film photography, printed by hand in Paris. Every edition is exposed
           on 35mm and limited to 10 prints.
         </p>
         <Link
           to="/collections/all"
-          className="button-slide w-fit px-8 py-4 uppercase text-xl font-normal font-clash-grotesk"
+          className="button-slide w-fit px-6 py-3 text-base md:px-8 md:py-4 md:text-xl uppercase font-normal font-clash-grotesk"
         >
           Shop prints
         </Link>
@@ -75,8 +75,7 @@ function HomePageHero() {
         src={groceryStore2}
         alt="Customers at a corner grocery store, shot on 35mm film"
         decoding="async"
-        className="aspect-9/16 w-full object-cover"
-        style={{maxHeight: '550px', height: '100%'}}
+        className="aspect-4/5 w-full object-cover md:aspect-9/16 md:h-full md:max-h-[550px]"
       />
     </section>
   );
@@ -84,27 +83,26 @@ function HomePageHero() {
 
 function HomePageHero2() {
   return (
-    <section className="grid grid-cols-2 gap-16 items-center">
+    <section className="grid gap-8 md:grid-cols-2 md:gap-16 md:items-center">
       <img
         src={swimmer}
         alt="A lone swimmer in open water"
         loading="lazy"
         decoding="async"
-        className="aspect-9/16 w-full object-cover"
-        style={{maxHeight: '550px', height: '100%'}}
+        className="aspect-4/5 w-full object-cover md:aspect-9/16 md:h-full md:max-h-[550px]"
       />
-      <div className="flex flex-col gap-12">
-        <h1 className="text-5xl font-bold font-clash-display uppercase max-w-xl">
+      <div className="flex flex-col gap-6 md:gap-12">
+        <h1 className="text-4xl md:text-5xl font-bold font-clash-display uppercase max-w-xl">
           Shot on film, printed wet, never reprinted.
         </h1>
-        <p className="text-2xl font-clash-grotesk max-w-xl font-lighttext-start">
+        <p className="text-lg md:text-2xl font-clash-grotesk max-w-xl font-light text-start">
           Nothing is retouched. The grain, the dust and the light leaks stay
           where they landed. When an edition closes, the negative is filed for
           good.
         </p>
         <Link
           to="/studio"
-          className="button-slide w-fit px-8 py-4 uppercase text-xl font-normal font-clash-grotesk"
+          className="button-slide w-fit px-6 py-3 text-base md:px-8 md:py-4 md:text-xl uppercase font-normal font-clash-grotesk"
         >
           Inside the Studio
         </Link>
@@ -123,13 +121,13 @@ function RecommendedProducts({
       className="recommended-products my-10"
       aria-labelledby="recommended-products"
     >
-      <div className="flex items-center justify-between">
-        <h2 className="text-4xl font-bold font-clash-display uppercase pb-8">
+      <div className="flex items-center justify-between gap-4 pb-4 md:pb-8">
+        <h2 className="text-lg md:text-4xl font-bold font-clash-display uppercase">
           Our Recommendations
         </h2>
         <Link
           to="/collections/all"
-          className="link-underline uppercase text-base font-normal font-clash-grotesk"
+          className="link-underline shrink-0 whitespace-nowrap uppercase text-sm md:text-base font-normal font-clash-grotesk"
         >
           View all
         </Link>
@@ -137,7 +135,7 @@ function RecommendedProducts({
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
-            <div className="grid grid-cols-3 gap-8">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8">
               {response?.products?.nodes?.map((product) => (
                 <HomeItem key={product.id} product={product} />
               ))}
