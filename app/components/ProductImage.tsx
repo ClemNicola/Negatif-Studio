@@ -18,7 +18,7 @@ export function ProductImage({
             alt={node.alt || 'Product Image'}
             data={node.image}
             key={node.id}
-            sizes="(min-width: 45em) 50vw, 100vw"
+            sizes="(min-width: 48em) 50vw, 100vw"
             loading={index === 0 ? 'eager' : 'lazy'}
             fetchPriority={index === 0 ? 'high' : undefined}
           />
