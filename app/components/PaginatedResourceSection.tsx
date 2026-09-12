@@ -42,7 +42,7 @@ export function PaginatedResourceSection<NodesType>({
               resourcesMarkup
             )}
             <div className="flex justify-center">
-              <NextLink className="button-slide px-8 py-4 uppercase text-xl font-normal font-clash-grotesk">
+              <NextLink className="button-slide px-6 py-3 text-base md:px-8 md:py-4 md:text-xl uppercase font-normal font-clash-grotesk">
                 {isLoading ? 'Loading...' : 'Load more'}
               </NextLink>
             </div>

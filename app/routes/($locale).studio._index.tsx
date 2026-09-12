@@ -32,7 +32,7 @@ const PROCESS_STEPS = [
 
 export default function Studio() {
   return (
-    <div className="px-16 mb-10">
+    <div className="mb-10 md:px-16">
       <StudioHero />
       <StudioProcess />
     </div>
@@ -41,17 +41,17 @@ export default function Studio() {
 
 function StudioHero() {
   return (
-    <div className="grid grid-cols-2 items-center mt-10">
-      <div className="flex flex-col gap-12">
-        <h1 className="text-6xl font-bold font-clash-display uppercase max-w-xl">
+    <div className="mt-6 grid gap-8 md:mt-10 md:grid-cols-2 md:items-center md:gap-0">
+      <div className="flex flex-col gap-6 md:gap-12">
+        <h1 className="text-4xl md:text-6xl font-bold font-clash-display uppercase max-w-xl">
           We work back from the negative.
         </h1>
-        <p className="text-xl font-light font-clash-grotesk max-w-xl text-start">
+        <p className="text-base md:text-xl font-light font-clash-grotesk max-w-xl text-start">
           Negatif Studio is a gallery for photographs that never touched a
           sensor. Expired stock, pushed two stops, printed wet in a darkroom in
           the 10th arrondissement of Paris.
         </p>
-        <p className="text-xl font-light font-clash-grotesk max-w-xl text-start">
+        <p className="text-base md:text-xl font-light font-clash-grotesk max-w-xl text-start">
           The studio was founded in 2023 by Clement Nicolas, who shoots one roll
           per outing and keeps the whole roll, the misses included. Prints are
           made in short sessions, six or seven sheets at a time, so no two are
@@ -63,8 +63,7 @@ function StudioHero() {
         src={rain}
         alt="Rain on a window, shot on 35mm film"
         decoding="async"
-        className="aspect-9/16 object-cover grayscale w-full"
-        style={{maxHeight: '600px', height: '100%'}}
+        className="aspect-4/5 w-full object-cover grayscale md:aspect-9/16 md:h-full md:max-h-[600px]"
       />
     </div>
   );
@@ -72,8 +71,8 @@ function StudioHero() {
 
 function StudioProcess() {
   return (
-    <section className="mt-32 flex flex-col gap-32">
-      <h2 className="text-5xl font-bold font-clash-display uppercase max-w-2xl">
+    <section className="mt-16 flex flex-col gap-16 md:mt-32 md:gap-32">
+      <h2 className="text-2xl md:text-5xl font-bold font-clash-display uppercase max-w-2xl">
         Three steps, none of them undoable.
       </h2>
       {PROCESS_STEPS.map((step, index) => (
@@ -91,16 +90,17 @@ function ProcessStep({
   flipped: boolean;
 }) {
   return (
-    <div className="grid grid-cols-2 items-center gap-20">
-      {/* Text stays first in the DOM; `order` only flips the visual side. */}
-      <div className={`flex flex-col gap-6 ${flipped ? 'order-2' : ''}`}>
-        <h3 className="text-3xl font-bold font-clash-display uppercase">
+    <div className="grid gap-6 md:grid-cols-2 md:items-center md:gap-20">
+      {/* Text stays first in the DOM; `order` only flips the visual side, and
+          only from md up — on mobile every step reads text then image. */}
+      <div className={`flex flex-col gap-6 ${flipped ? 'md:order-2' : ''}`}>
+        <h3 className="text-2xl md:text-3xl font-bold font-clash-display uppercase">
           {step.title}
         </h3>
-        <p className="text-xl font-light font-clash-grotesk max-w-md">
+        <p className="text-base md:text-xl font-light font-clash-grotesk max-w-md">
           {step.lead}
         </p>
-        <p className="text-lg font-light font-clash-grotesk max-w-md text-text">
+        <p className="text-sm md:text-lg font-light font-clash-grotesk max-w-md text-text">
           {step.detail}
         </p>
       </div>
@@ -109,7 +109,7 @@ function ProcessStep({
         alt={step.alt}
         loading="lazy"
         decoding="async"
-        className={`aspect-3/2 w-full object-cover ${flipped ? 'order-1' : ''}`}
+        className={`aspect-3/2 w-full object-cover ${flipped ? 'md:order-1' : ''}`}
       />
     </div>
   );

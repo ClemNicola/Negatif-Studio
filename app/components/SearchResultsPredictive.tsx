@@ -105,13 +105,13 @@ function SearchResultsPredictiveArticles({
                   <Image
                     alt={article.image.altText ?? ''}
                     src={article.image.url}
-                    width={50}
-                    height={50}
+                    width={48}
+                    height={64}
                   />
                 )}
-                <div>
-                  <span>{article.title}</span>
-                </div>
+                <span className="predictive-search-result-title">
+                  {article.title}
+                </span>
               </Link>
             </li>
           );
@@ -146,13 +146,13 @@ function SearchResultsPredictiveCollections({
                   <Image
                     alt={collection.image.altText ?? ''}
                     src={collection.image.url}
-                    width={50}
-                    height={50}
+                    width={48}
+                    height={64}
                   />
                 )}
-                <div>
-                  <span>{collection.title}</span>
-                </div>
+                <span className="predictive-search-result-title">
+                  {collection.title}
+                </span>
               </Link>
             </li>
           );
@@ -183,9 +183,9 @@ function SearchResultsPredictivePages({
           return (
             <li className="predictive-search-result-item" key={page.id}>
               <Link onClick={closeSearch} to={pageUrl}>
-                <div>
-                  <span>{page.title}</span>
-                </div>
+                <span className="predictive-search-result-title">
+                  {page.title}
+                </span>
               </Link>
             </li>
           );
@@ -222,13 +222,20 @@ function SearchResultsPredictiveProducts({
                   <Image
                     alt={image.altText ?? ''}
                     src={image.url}
-                    width={50}
-                    height={50}
+                    width={48}
+                    height={64}
                   />
                 )}
-                <div>
-                  <p>{product.title}</p>
-                  <small>{price && <Money data={price} />}</small>
+                <div className="flex flex-col gap-1">
+                  <span className="predictive-search-result-title">
+                    {product.title}
+                  </span>
+                  {price ? (
+                    <Money
+                      className="predictive-search-result-price"
+                      data={price}
+                    />
+                  ) : null}
                 </div>
               </Link>
             </li>
@@ -268,7 +275,7 @@ function SearchResultsPredictiveEmpty({
   }
 
   return (
-    <p>
+    <p className="predictive-search-message">
       No results found for <q>{term.current}</q>
     </p>
   );

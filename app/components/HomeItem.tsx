@@ -39,12 +39,12 @@ export function HomeItem({
         )}
       </Link>
       <div className="flex justify-between">
-        <h4 className="self-start">{product.title}</h4>
-        <div className="flex items-center gap-2 text-sm font-clash-grotesk">
+        <h4 className="self-start text-sm md:text-base">{product.title}</h4>
+        <div className="flex items-center gap-2 text-xs md:text-sm font-clash-grotesk">
           <span>from</span>
           <Money
             data={product.priceRange.minVariantPrice}
-            className="text-sm"
+            className="text-xs md:text-sm"
           />
         </div>
       </div>

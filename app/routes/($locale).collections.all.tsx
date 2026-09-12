@@ -56,8 +56,8 @@ export default function Collection() {
   const {products, collections} = useLoaderData<typeof loader>();
 
   return (
-    <div className="px-16 my-10">
-      <h1 className="text-5xl font-bold font-clash-display uppercase max-w-xl">
+    <div className="my-6 md:my-10 md:px-16">
+      <h1 className="text-3xl md:text-5xl font-bold font-clash-display uppercase max-w-xl">
         Prints - All
       </h1>
       <CollectionsNav collections={collections} />

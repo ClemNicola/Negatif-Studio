@@ -2,6 +2,8 @@
   --aside-width: 480px;
   --grid-item-width: 355px;
   --header-height: 80px;
+  --mobile-header-height: 64px;
+  --mobile-gutter: 1rem;
   --color-dark: #000;
   --color-light: #fff;
 }
@@ -87,6 +89,10 @@
   }
 }
 
+html:has(.mobile-menu.expanded) {
+  overflow: hidden;
+}
+
 aside {
   background: var(--color-light);
   box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
@@ -162,8 +168,8 @@ aside li {
     opacity 300ms ease-in-out,
     visibility 0s linear 300ms;
   visibility: hidden;
-  /* Above the sticky header, which also sits at 10. */
-  z-index: 20;
+  /* Above both sticky headers (desktop 10, mobile 50). */
+  z-index: 60;
 }
 
 .overlay .close-outside {
@@ -314,6 +320,221 @@ button.reset:hover:not(:has(> *)) {
   min-width: fit-content;
 }
 
+@media (max-width: 47.99em) {
+  .header {
+    display: none;
+  }
+}
+
+/*
+* --------------------------------------------------
+* components/MobileHeader
+* --------------------------------------------------
+*/
+.mobile-header {
+  align-items: center;
+  background: var(--color-bg);
+  display: grid;
+  /* The middle track is the one allowed to shrink, so the icons are never
+     squeezed or pushed off-screen on narrow phones. */
+  grid-template-columns: 1fr minmax(0, auto) 1fr;
+  height: var(--mobile-header-height);
+  padding: 0 var(--mobile-gutter);
+  /* Fixed rather than sticky: pinned to the viewport, the bar always spans the
+     full screen width even while a page below still scrolls horizontally. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* Above the sliding menu panel, so the logo stays visible over it. */
+  z-index: 50;
+}
+
+.mobile-header-spacer {
+  flex: none;
+  height: var(--mobile-header-height);
+}
+
+@media (min-width: 48em) {
+  .mobile-header,
+  .mobile-header-spacer {
+    display: none;
+  }
+}
+
+.mobile-header-logo {
+  /* Sits above the menu panel while it slides underneath. */
+  position: relative;
+  z-index: 50;
+  /* Scales with the screen so it never crowds the icons, from 320px up. */
+  font-size: clamp(0.8125rem, 4.2vw, 1.375rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.mobile-header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+  /* Pulls the icons' optical edge back in line with the 1rem bar padding. */
+  margin-right: -0.625rem;
+}
+
+.mobile-header-button {
+  background: none;
+  border: 0;
+  color: var(--color-text);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  /* Comfortable tap target without inflating the bar. */
+  height: 2.75rem;
+  width: 2.75rem;
+}
+
+/* The burger, as a grid child, would otherwise stretch across its 1fr column. */
+.mobile-header > .mobile-header-button {
+  justify-self: start;
+  margin-left: -0.625rem;
+}
+
+/* Smallest phones: tighter icons buy back the room the logo needs to stay centred. */
+@media (max-width: 22.5em) {
+  .mobile-header-button {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
+  .mobile-header-actions {
+    gap: 0.5rem;
+  }
+}
+
+.mobile-header-button svg {
+  height: clamp(1.25rem, 5.5vw, 1.5rem);
+  width: clamp(1.25rem, 5.5vw, 1.5rem);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mobile-header-cart {
+  position: relative;
+}
+
+.mobile-header-cart-count {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.45rem;
+  font-size: 0.625rem;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+/* Slides in from the right, underneath the sticky bar. */
+.mobile-menu {
+  background: var(--color-bg);
+  position: fixed;
+  top: var(--mobile-header-height);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: translateX(100%);
+  visibility: hidden;
+  z-index: 40;
+  transition:
+    transform 400ms cubic-bezier(0.6, 0, 0.3, 1),
+    visibility 0s linear 400ms;
+}
+
+.mobile-menu.expanded {
+  transform: translateX(0);
+  visibility: visible;
+  transition:
+    transform 400ms cubic-bezier(0.6, 0, 0.3, 1),
+    visibility 0s;
+}
+
+@media (min-width: 48em) {
+  .mobile-menu {
+    display: none;
+  }
+}
+
+.mobile-menu-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 0 3rem;
+}
+
+.mobile-menu-link {
+  align-items: center;
+  background: none;
+  border: 0;
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  font-size: 1.375rem;
+  justify-content: space-between;
+  letter-spacing: 0.12em;
+  padding: 1rem var(--mobile-gutter);
+  text-align: left;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.mobile-menu-trigger svg {
+  height: 1.25rem;
+  width: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 300ms var(--underline-ease);
+}
+
+.mobile-menu-trigger[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.mobile-menu-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 300ms var(--underline-ease);
+}
+
+.mobile-menu-panel.expanded {
+  grid-template-rows: 1fr;
+}
+
+.mobile-menu-panel-inner {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.mobile-menu-sublink {
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+  padding: 0.5rem var(--mobile-gutter) 0.5rem calc(var(--mobile-gutter) + 1rem);
+}
+
 /*
 * --------------------------------------------------
 * components/Footer
@@ -383,14 +604,58 @@ button.reset:hover:not(:has(> *)) {
 * --------------------------------------------------
 */
 .predictive-search {
-  height: calc(100vh - var(--header-height) - 40px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
 
 .predictive-search-form {
   background: var(--color-light);
+  padding-bottom: 1.25rem;
   position: sticky;
   top: 0;
+  z-index: 1;
+}
+
+.search-field {
+  align-items: center;
+  border-bottom: 1px solid var(--color-text);
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 0.625rem;
+}
+
+/* The global `input` reset is unlayered, so it beats Tailwind utilities here. */
+.search-input {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  flex: 1;
+  font-size: 1rem;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: color-mix(in srgb, var(--color-text) 40%, transparent);
+}
+
+.search-submit {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  flex: none;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  padding: 0;
+  text-transform: uppercase;
 }
 
 .predictive-search-result {
@@ -398,36 +663,95 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .predictive-search-result h5 {
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
   text-transform: uppercase;
 }
 
+/* Neutralises the global `aside li` margin. */
 .predictive-search-result-item {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
 }
 
 .predictive-search-result-item a {
   align-items: center;
   display: flex;
+  gap: 1rem;
+  padding: 0.625rem 0;
 }
 
-.predictive-search-result-item a img {
-  margin-right: 0.75rem;
-  height: 100%;
+.predictive-search-result-item img {
+  flex: none;
+  height: 64px;
+  margin: 0;
+  object-fit: cover;
+  width: 48px;
+}
+
+.predictive-search-result-title {
+  font-size: 0.875rem;
+}
+
+.predictive-search-result-item a:hover .predictive-search-result-title {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.predictive-search-result-price {
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  font-size: 0.75rem;
+}
+
+.predictive-search-message {
+  font-size: 0.875rem;
+}
+
+/* Same look as .products-grid, but `auto-fill` keeps the empty tracks, so a
+   single result sits in one column instead of stretching across the page. */
+.search-results-grid {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 48em) {
+  .search-results-grid {
+    grid-gap: 1.5rem;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(var(--grid-item-width), 1fr)
+    );
+  }
+}
+
+.search-page-heading {
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
 }
 
 .search-result {
-  margin-bottom: 1.5rem;
+  margin-bottom: 3rem;
 }
 
-.search-results-item {
-  margin-bottom: 0.5rem;
+.search-result:last-child {
+  margin-bottom: 0;
 }
 
-.search-results-item a {
+.search-results-list {
   display: flex;
-  flex: row;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Neutralises the global `li` margin. */
+.search-results-item {
+  margin-bottom: 0;
 }
 
 /*
@@ -494,9 +818,19 @@ button.reset:hover:not(:has(> *)) {
 
 .products-grid {
   display: grid;
-  grid-gap: 1.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(var(--grid-item-width), 1fr));
+  grid-gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-bottom: 2rem;
+}
+
+@media (min-width: 48em) {
+  .products-grid {
+    grid-gap: 1.5rem;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(var(--grid-item-width), 1fr)
+    );
+  }
 }
 
 .product-item img {
@@ -511,7 +845,7 @@ button.reset:hover:not(:has(> *)) {
 */
 .product {
   display: grid;
-  @media (min-width: 45em) {
+  @media (min-width: 48em) {
     grid-template-columns: 1fr 1fr;
     grid-gap: 4rem;
   }

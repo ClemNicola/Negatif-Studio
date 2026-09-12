@@ -10,7 +10,7 @@ import type {ProductFragment} from 'storefrontapi.generated';
 
 // The selected state is driven by data-selected so it can transition both ways.
 const optionItemClassName = ({exists}: {exists: boolean}) =>
-  `button-slide-invert bg-text/5 flex w-full cursor-pointer items-center justify-between gap-4 px-6 py-5 text-left text-lg${
+  `button-slide-invert bg-text/5 flex w-full cursor-pointer items-center justify-between gap-3 md:gap-4 px-4 py-4 md:px-6 md:py-5 text-left text-base md:text-lg${
     exists ? '' : ' opacity-30 cursor-not-allowed line-through'
   }`;
 
@@ -25,7 +25,7 @@ export function ProductForm({
   const {open} = useAside();
 
   return (
-    <div className="flex flex-col gap-8 font-clash-grotesk">
+    <div className="flex flex-col gap-6 md:gap-8 font-clash-grotesk">
       {productOptions.map((option) => {
         if (option.optionValues.length === 1) return null;
 
@@ -116,19 +116,19 @@ export function ProductForm({
       })}
 
       <div className="flex items-baseline justify-between border-t border-text/20 pt-6">
-        <span className="text-lg uppercase tracking-widest text-text/50">
+        <span className="text-base md:text-lg uppercase tracking-widest text-text/50">
           Total
         </span>
         {selectedVariant?.price ? (
           <Money
-            className="font-clash-display text-3xl font-bold"
+            className="font-clash-display text-2xl md:text-3xl font-bold"
             data={selectedVariant.price}
           />
         ) : null}
       </div>
 
       <AddToCartButton
-        className="cursor-pointer button-slide px-8 py-5 w-full text-lg uppercase tracking-widest disabled:cursor-not-allowed disabled:opacity-40"
+        className="cursor-pointer button-slide px-6 py-4 md:px-8 md:py-5 w-full text-base md:text-lg uppercase tracking-widest disabled:cursor-not-allowed disabled:opacity-40"
         disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
           open('cart');
