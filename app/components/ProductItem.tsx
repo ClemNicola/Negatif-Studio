@@ -28,7 +28,7 @@ export function ProductItem({
               aspectRatio="9/12"
               data={image}
               loading={loading}
-              sizes="(min-width: 45em) 500px, 100vw"
+              sizes="(min-width: 48em) 500px, 50vw"
             />
             <div className="slide-reveal absolute py-8 w-full bottom-0 bg-text/70 flex items-center justify-center">
               <span className="text-bg text-base font-normal font-clash-grotesk">
@@ -39,12 +39,12 @@ export function ProductItem({
         )}
       </Link>
       <div className="flex justify-between">
-        <h4 className="self-start">{product.title}</h4>
-        <div className="flex items-center gap-2 text-sm font-clash-grotesk">
+        <h4 className="self-start text-sm md:text-base">{product.title}</h4>
+        <div className="flex items-center gap-2 text-xs md:text-sm font-clash-grotesk">
           <span>from</span>
           <Money
             data={product.priceRange.minVariantPrice}
-            className="text-sm"
+            className="text-xs md:text-sm"
           />
         </div>
       </div>

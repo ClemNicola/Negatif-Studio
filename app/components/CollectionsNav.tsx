@@ -24,9 +24,12 @@ export function CollectionsNav({collections}: CollectionsNavProps) {
     activeSort === DEFAULT_SORT ? '' : `?sort=${activeSort}`;
 
   return (
-    <nav className="border-b border-neutral-300 my-8 flex items-center justify-between">
-      <ul className="flex gap-4 pb-3" aria-label="Collections">
-        <li>
+    <nav className="border-b border-neutral-300 my-6 md:my-8 flex flex-col md:flex-row md:items-center md:justify-between">
+      <ul
+        className="flex gap-4 overflow-x-auto md:overflow-x-visible"
+        aria-label="Collections"
+      >
+        <li className="shrink-0">
           <NavLink
             to={`/collections/all${collectionSearch}`}
             prefetch="intent"
@@ -37,7 +40,7 @@ export function CollectionsNav({collections}: CollectionsNavProps) {
           </NavLink>
         </li>
         {collectionsWithoutHome.map((collection) => (
-          <li key={collection.id}>
+          <li key={collection.id} className="shrink-0">
             <NavLink
               to={`/collections/${collection.handle}${collectionSearch}`}
               prefetch="intent"
@@ -48,7 +51,10 @@ export function CollectionsNav({collections}: CollectionsNavProps) {
           </li>
         ))}
       </ul>
-      <ul className="flex items-center gap-8 pb-3" aria-label="Sort by">
+      <ul
+        className="flex items-center gap-4 md:gap-8 py-4 md:py-0 md:pb-3"
+        aria-label="Sort by"
+      >
         {SORT_OPTIONS.map((option) => (
           <li key={option.value}>
             <Link
