@@ -19,9 +19,9 @@ const FOOTER_NAV = [
 
 export function Footer() {
   return (
-    <footer className="footer font-clash-grotesk mt-20">
-      <div className="flex items-start justify-between gap-16 px-16 py-16">
-        <div className="flex gap-24">
+    <footer className="footer font-clash-grotesk mt-12 md:mt-20">
+      <div className="flex flex-col gap-10 px-6 py-10 md:flex-row md:items-start md:justify-between md:gap-16 md:px-16 md:py-16">
+        <div className="flex gap-12 md:gap-24">
           {FOOTER_NAV.map((column) => (
             <nav
               key={column.title}
@@ -51,7 +51,7 @@ export function Footer() {
 
 function Newsletter() {
   return (
-    <div className="flex w-80 flex-col gap-3">
+    <div className="flex w-full flex-col gap-3 md:w-80">
       <p className="text-sm">One letter per edition</p>
       <form className="footer-newsletter flex items-center gap-4">
         <label className="sr-only" htmlFor="footer-email">
