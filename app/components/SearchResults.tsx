@@ -40,8 +40,8 @@ function SearchResultsArticles({
 
   return (
     <div className="search-result">
-      <h2>Articles</h2>
-      <div>
+      <h2 className="search-page-heading">Articles</h2>
+      <div className="search-results-list">
         {articles?.nodes?.map((article) => {
           const articleUrl = urlWithTrackingParams({
             baseUrl: `/blogs/${article.handle}`,
@@ -51,14 +51,17 @@ function SearchResultsArticles({
 
           return (
             <div className="search-results-item" key={article.id}>
-              <Link prefetch="intent" to={articleUrl}>
+              <Link
+                className="link-underline w-fit text-sm md:text-base"
+                prefetch="intent"
+                to={articleUrl}
+              >
                 {article.title}
               </Link>
             </div>
           );
         })}
       </div>
-      <br />
     </div>
   );
 }
@@ -70,8 +73,8 @@ function SearchResultsPages({term, pages}: PartialSearchResult<'pages'>) {
 
   return (
     <div className="search-result">
-      <h2>Pages</h2>
-      <div>
+      <h2 className="search-page-heading">Pages</h2>
+      <div className="search-results-list">
         {pages?.nodes?.map((page) => {
           const pageUrl = urlWithTrackingParams({
             baseUrl: `/pages/${page.handle}`,
@@ -81,14 +84,17 @@ function SearchResultsPages({term, pages}: PartialSearchResult<'pages'>) {
 
           return (
             <div className="search-results-item" key={page.id}>
-              <Link prefetch="intent" to={pageUrl}>
+              <Link
+                className="link-underline w-fit text-sm md:text-base"
+                prefetch="intent"
+                to={pageUrl}
+              >
                 {page.title}
               </Link>
             </div>
           );
         })}
       </div>
-      <br />
     </div>
   );
 }
@@ -103,7 +109,7 @@ function SearchResultsProducts({
 
   return (
     <div className="search-result">
-      <h2>Products</h2>
+      <h2 className="search-page-heading">Products</h2>
       <Pagination connection={products}>
         {({nodes, isLoading, NextLink, PreviousLink}) => {
           const ItemsMarkup = nodes.map((product) => {
@@ -118,13 +124,28 @@ function SearchResultsProducts({
 
             return (
               <div className="search-results-item" key={product.id}>
-                <Link prefetch="intent" to={productUrl}>
+                <Link className="group block" prefetch="intent" to={productUrl}>
                   {image && (
-                    <Image data={image} alt={product.title} width={50} />
+                    <div className="relative overflow-hidden">
+                      <Image
+                        alt={image.altText || product.title}
+                        aspectRatio="9/12"
+                        className="hover:image-invert transition-all duration-300"
+                        data={image}
+                        sizes="(min-width: 48em) 500px, 50vw"
+                      />
+                    </div>
                   )}
-                  <div>
-                    <p>{product.title}</p>
-                    <small>{price && <Money data={price} />}</small>
+                  <div className="flex justify-between">
+                    <h4 className="self-start text-sm md:text-base">
+                      {product.title}
+                    </h4>
+                    {price ? (
+                      <Money
+                        className="text-xs md:text-sm font-clash-grotesk"
+                        data={price}
+                      />
+                    ) : null}
                   </div>
                 </Link>
               </div>
@@ -133,29 +154,27 @@ function SearchResultsProducts({
 
           return (
             <div>
-              <div>
-                <PreviousLink>
-                  {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
+              <div className="flex justify-center">
+                <PreviousLink className="link-underline text-sm uppercase tracking-widest font-clash-grotesk">
+                  {isLoading ? 'Loading…' : <span>↑ Load previous</span>}
                 </PreviousLink>
               </div>
-              <div>
-                {ItemsMarkup}
-                <br />
-              </div>
-              <div>
-                <NextLink>
-                  {isLoading ? 'Loading...' : <span>Load more ↓</span>}
+              <div className="search-results-grid">{ItemsMarkup}</div>
+              <div className="flex justify-center">
+                <NextLink className="button-slide px-6 py-3 text-base md:px-8 md:py-4 md:text-xl uppercase font-normal font-clash-grotesk">
+                  {isLoading ? 'Loading…' : 'Load more'}
                 </NextLink>
               </div>
             </div>
           );
         }}
       </Pagination>
-      <br />
     </div>
   );
 }
 
 function SearchResultsEmpty() {
-  return <p>No results, try a different search.</p>;
+  return (
+    <p className="text-sm md:text-base">No results, try a different search.</p>
+  );
 }

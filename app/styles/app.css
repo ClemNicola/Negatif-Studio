@@ -604,14 +604,58 @@ button.reset:hover:not(:has(> *)) {
 * --------------------------------------------------
 */
 .predictive-search {
-  height: calc(100vh - var(--header-height) - 40px);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
 }
 
 .predictive-search-form {
   background: var(--color-light);
+  padding-bottom: 1.25rem;
   position: sticky;
   top: 0;
+  z-index: 1;
+}
+
+.search-field {
+  align-items: center;
+  border-bottom: 1px solid var(--color-text);
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 0.625rem;
+}
+
+/* The global `input` reset is unlayered, so it beats Tailwind utilities here. */
+.search-input {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  flex: 1;
+  font-size: 1rem;
+  margin: 0;
+  min-width: 0;
+  padding: 0;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: color-mix(in srgb, var(--color-text) 40%, transparent);
+}
+
+.search-submit {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  flex: none;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  padding: 0;
+  text-transform: uppercase;
 }
 
 .predictive-search-result {
@@ -619,36 +663,95 @@ button.reset:hover:not(:has(> *)) {
 }
 
 .predictive-search-result h5 {
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
   text-transform: uppercase;
 }
 
+/* Neutralises the global `aside li` margin. */
 .predictive-search-result-item {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
 }
 
 .predictive-search-result-item a {
   align-items: center;
   display: flex;
+  gap: 1rem;
+  padding: 0.625rem 0;
 }
 
-.predictive-search-result-item a img {
-  margin-right: 0.75rem;
-  height: 100%;
+.predictive-search-result-item img {
+  flex: none;
+  height: 64px;
+  margin: 0;
+  object-fit: cover;
+  width: 48px;
+}
+
+.predictive-search-result-title {
+  font-size: 0.875rem;
+}
+
+.predictive-search-result-item a:hover .predictive-search-result-title {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.predictive-search-result-price {
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  font-size: 0.75rem;
+}
+
+.predictive-search-message {
+  font-size: 0.875rem;
+}
+
+/* Same look as .products-grid, but `auto-fill` keeps the empty tracks, so a
+   single result sits in one column instead of stretching across the page. */
+.search-results-grid {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 48em) {
+  .search-results-grid {
+    grid-gap: 1.5rem;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(var(--grid-item-width), 1fr)
+    );
+  }
+}
+
+.search-page-heading {
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
 }
 
 .search-result {
-  margin-bottom: 1.5rem;
+  margin-bottom: 3rem;
 }
 
-.search-results-item {
-  margin-bottom: 0.5rem;
+.search-result:last-child {
+  margin-bottom: 0;
 }
 
-.search-results-item a {
+.search-results-list {
   display: flex;
-  flex: row;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Neutralises the global `li` margin. */
+.search-results-item {
+  margin-bottom: 0;
 }
 
 /*

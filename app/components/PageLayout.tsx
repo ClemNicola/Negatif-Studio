@@ -84,22 +84,30 @@ function SearchAside() {
   return (
     <Aside type="search" heading="SEARCH">
       <div className="predictive-search">
-        <br />
         <SearchFormPredictive>
-          {({fetchResults, goToSearch, inputRef}) => (
-            <>
+          {({fetchResults, inputRef}) => (
+            <div className="search-field">
+              <label className="sr-only" htmlFor="predictive-search-input">
+                Search
+              </label>
               <input
+                className="search-input font-clash-grotesk"
+                id="predictive-search-input"
+                list={queriesDatalistId}
                 name="q"
                 onChange={fetchResults}
                 onFocus={fetchResults}
-                placeholder="Search"
+                placeholder="Search prints"
                 ref={inputRef}
                 type="search"
-                list={queriesDatalistId}
               />
-              &nbsp;
-              <button onClick={goToSearch}>Search</button>
-            </>
+              <button
+                className="search-submit link-underline font-clash-grotesk"
+                type="submit"
+              >
+                Search
+              </button>
+            </div>
           )}
         </SearchFormPredictive>
 
@@ -108,7 +116,9 @@ function SearchAside() {
             const {articles, collections, pages, products, queries} = items;
 
             if (state === 'loading' && term.current) {
-              return <div>Loading...</div>;
+              return (
+                <div className="predictive-search-message">Searching…</div>
+              );
             }
 
             if (!total) {
@@ -143,13 +153,11 @@ function SearchAside() {
                 />
                 {term.current && total ? (
                   <Link
+                    className="predictive-search-message link-underline font-clash-grotesk w-fit uppercase tracking-widest"
                     onClick={closeSearch}
                     to={`${SEARCH_ENDPOINT}?q=${term.current}`}
                   >
-                    <p>
-                      View all results for <q>{term.current}</q>
-                      &nbsp; →
-                    </p>
+                    View all results →
                   </Link>
                 ) : null}
               </>
