@@ -3,8 +3,6 @@ import {useNavigate} from 'react-router';
 import gsap from 'gsap';
 import {useGSAP} from '@gsap/react';
 
-gsap.registerPlugin(useGSAP);
-
 type TransitionPageContextValue = {
   navigateWithCurtain: (to: string) => void;
 };
