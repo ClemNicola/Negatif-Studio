@@ -7,7 +7,7 @@ Boutique de tirages argentiques sur Shopify Hydrogen.
 ## Principes qui gouvernent tout
 
 1. **Fonctionnel avant craft.** Un flow commerce qui marche prime sur toute anim ou polish.
-2. **Un front à la fois.** Ne jamais se battre sur deux chantiers en parallèle (ex : apprendre le framework *et* produire des assets).
+2. **Un front à la fois.** Ne jamais se battre sur deux chantiers en parallèle (ex : apprendre le framework _et_ produire des assets).
 3. **Time-box les assets.** La prod de mockups/photos ne doit jamais repousser le code. C'est ce qui a tué Eden.
 4. **FR d'abord.** Le i18n est une feature de phase tardive, pas une fondation.
 5. **Ne pas sur-construire.** Pas de Stripe custom, pas de blog, pas de newsletter. Hors scope, définitivement.
@@ -36,34 +36,40 @@ Objectif : environnement vivant, tes vraies données qui remontent en local.
 En français, zéro animation, design brutaliste déjà défini. C'est 80% de la valeur.
 
 ### 1.1 — Layout global
-- [ ] Header : nav (Prints / Studio / Contact) + logo centré + Search + Cart(n)
-- [ ] Footer sobre
-- [ ] Styles de base (typo, couleurs, la grille brutaliste)
+
+- [x] Header : nav (Prints / Studio / Contact) + logo centré + Search + Cart(n)
+- [x] Footer sobre
+- [x] Styles de base (typo, couleurs, la grille brutaliste)
 
 ### 1.2 — Page Prints (listing)
-- [ ] Query d'une collection → grille de tirages
-- [ ] Filtres par série (Transit / Water / Archive… = tes collections ou tags)
-- [ ] Tri (Newest / Price ↑ / Price ↓)
-- [ ] Chaque carte → lien vers la PDP
+
+- [x] Query d'une collection → grille de tirages
+- [x] Filtres par série (Transit / Water / Archive… = tes collections ou tags)
+- [x] Tri (Newest / Price ↑ / Price ↓)
+- [x] Chaque carte → lien vers la PDP
 
 ### 1.3 — Route dynamique `collections/$handle`
-- [ ] Une seule route affiche n'importe laquelle de tes 5 séries
-- [ ] C'est LE skill Hydrogen qui compte pour Numbered — routing dynamique propre
+
+- [x] Une seule route affiche n'importe laquelle de tes 5 séries
+- [x] C'est LE skill Hydrogen qui compte pour Numbered — routing dynamique propre
 
 ### 1.4 — PDP / Fiche produit (le gros morceau)
-- [ ] Query produit avec `options` + `variants`
-- [ ] Sélecteur Format (4) × Finition (2) — boucler sur `product.options`, pas de câblage en dur
-- [ ] Prix réactif : se met à jour à la sélection du variant
-- [ ] Total + bouton Add to cart
-- [ ] Galerie image (photo brute pour l'instant, mockup encadré = phase 3)
+
+- [x] Query produit avec `options` + `variants`
+- [x] Sélecteur Format (4) × Finition (2) — boucler sur `product.options`, pas de câblage en dur
+- [x] Prix réactif : se met à jour à la sélection du variant
+- [x] Total + bouton Add to cart
+- [x] Galerie image (photo brute pour l'instant, mockup encadré = phase 3)
 
 ### 1.5 — Panier
-- [ ] Drawer/aside cart (cart API, `CartForm`)
-- [ ] UI optimiste (`useOptimisticCart`)
-- [ ] Bouton checkout → **redirect natif Shopify** (rien à coder côté paiement)
+
+- [x] Drawer/aside cart (cart API, `CartForm`)
+- [x] UI optimiste (`useOptimisticCart`)
+- [x] Bouton checkout → **redirect natif Shopify** (rien à coder côté paiement)
 
 ### 1.6 — Pages statiques
-- [ ] Studio (histoire de la marque) — hardcodée, verrouillée
+
+- [x] Studio (histoire de la marque) — hardcodée, verrouillée
 - [ ] Contact — simple
 
 **Règle d'or :** tout en FR, tout en dur pour le narratif, aucune anim. Debugger sur une base sobre.
@@ -75,10 +81,10 @@ En français, zéro animation, design brutaliste déjà défini. C'est 80% de la
 
 Objectif : le site est en ligne, versionné, redéployé au push.
 
-- [ ] Repo GitHub (privé) créé + poussé
-- [ ] Connexion Oxygen (l'écran GitHub App qu'on a vu)
-- [ ] Premier deploy, vérif du site en prod
-- [ ] Le CI/CD tourne (push → redeploy auto)
+- [x] Repo GitHub (privé) créé + poussé
+- [x] Connexion Oxygen (l'écran GitHub App qu'on a vu)
+- [x] Premier deploy, vérif du site en prod
+- [x] Le CI/CD tourne (push → redeploy auto)
 
 **Règle d'or :** on déploie du fonctionnel, pas du parfait. Un site brut en ligne > un site parfait en local.
 **Fini quand :** l'URL Oxygen affiche mon site et un `git push` le met à jour tout seul.
@@ -89,12 +95,11 @@ Objectif : le site est en ligne, versionné, redéployé au push.
 
 Objectif : ça devient premium. Toujours zéro anim JS ici.
 
-- [ ] Responsive complet (mobile / tablette / desktop) — si pas déjà fait au fil de l'eau
-- [ ] Composant `<Image>` de Hydrogen (optimisation, srcset, lazy)
+- [x] Responsive complet (mobile / tablette / desktop) — si pas déjà fait au fil de l'eau
+- [x] Composant `<Image>` de Hydrogen (optimisation, srcset, lazy)
 - [ ] SEO : meta par page, structured data produit, sitemap
 - [ ] Perf (Lighthouse, poids images, LCP)
 - [ ] 1-2 metafields custom (Année, Lieu) affichés sur la PDP → apprendre le pattern metafield → query
-- [ ] Mockups encadrés : image par variant (Framed). **Batch Photopea, en UNE session.**
 
 **Règle d'or sur les mockups :** ne PAS les produire avant d'en être là. 2-3 suffisent pour la démo ; le reste en une session groupée, pas photo par photo étalé sur des soirées.
 **Fini quand :** Lighthouse correct, responsive propre, la PDP montre les infos metafield + le mockup encadré au bon variant.

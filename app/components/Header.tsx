@@ -13,6 +13,7 @@ import type {
 import {useAside} from '~/components/Aside';
 import {DropDownMenu} from '~/components/DropDownMenu';
 import {MobileHeader} from '~/components/MobileHeader';
+import {usePageTransition} from './TransitionPage';
 
 interface HeaderProps {
   header: HeaderQuery;
@@ -30,11 +31,24 @@ const HEADER_NAV = [
 
 export function Header({header, isLoggedIn, cart, printsMenu}: HeaderProps) {
   const {shop} = header;
+  const {navigateWithCurtain} = usePageTransition();
   return (
     <>
       <header className="header">
         <HeaderMenu viewport="desktop" printsMenu={printsMenu} />
         <NavLink
+          onClick={(event) => {
+            if (
+              event.button !== 0 ||
+              event.metaKey ||
+              event.ctrlKey ||
+              event.shiftKey
+            ) {
+              return;
+            }
+            event.preventDefault();
+            navigateWithCurtain('/');
+          }}
           prefetch="intent"
           to="/"
           className="text-3xl font-extrabold font-clash-display tracking-wider uppercase"
@@ -58,6 +72,7 @@ export function HeaderMenu({
 }) {
   const {close} = useAside();
   const [isDropdownDismissed, setIsDropdownDismissed] = useState(false);
+  const {navigateWithCurtain} = usePageTransition();
 
   const handleDropdownClick = (event: MouseEvent<HTMLAnchorElement>) => {
     close();
@@ -78,7 +93,20 @@ export function HeaderMenu({
             className="header-menu-item link-underline"
             end
             key={item.to}
-            onClick={close}
+            onClick={(event) => {
+              if (
+                event.button !== 0 ||
+                event.metaKey ||
+                event.ctrlKey ||
+                event.shiftKey
+              ) {
+                close();
+                return;
+              }
+              event.preventDefault();
+              navigateWithCurtain(item.to);
+              close();
+            }}
             prefetch="intent"
             style={activeLinkStyle}
             to={item.to}
