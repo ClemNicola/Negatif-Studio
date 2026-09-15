@@ -1,11 +1,24 @@
-import {useRef, createContext, useContext} from 'react';
+import {useRef, createContext, useContext, type MouseEvent} from 'react';
 import {useNavigate} from 'react-router';
 import gsap from 'gsap';
 import {useGSAP} from '@gsap/react';
 
+type CurtainClickHandler = (event: MouseEvent<HTMLAnchorElement>) => void;
+
 type TransitionPageContextValue = {
   navigateWithCurtain: (to: string) => void;
+  onCurtainClick: (to: string, after?: () => void) => CurtainClickHandler;
 };
+
+function isModifiedClick(event: MouseEvent) {
+  return (
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  );
+}
 
 const TransitionPageContext = createContext<
   TransitionPageContextValue | undefined
@@ -56,8 +69,22 @@ export default function TransitionPage({
       .set(curtain.current, {yPercent: -100});
   });
 
+  const onCurtainClick =
+    (to: string, after?: () => void): CurtainClickHandler =>
+    (event) => {
+      if (isModifiedClick(event)) {
+        after?.();
+        return;
+      }
+      event.preventDefault();
+      navigateWithCurtain(to);
+      after?.();
+    };
+
   return (
-    <TransitionPageContext.Provider value={{navigateWithCurtain}}>
+    <TransitionPageContext.Provider
+      value={{navigateWithCurtain, onCurtainClick}}
+    >
       {children}
       <div
         ref={curtain}

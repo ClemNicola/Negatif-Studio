@@ -1,11 +1,18 @@
 import {Await, useLoaderData, Link} from 'react-router';
 import type {Route} from './+types/_index';
-import {Suspense} from 'react';
-import type {RecommendedProductsQuery} from 'storefrontapi.generated';
+import {Suspense, useRef} from 'react';
+import type {
+  RecommendedProductFragment,
+  RecommendedProductsQuery,
+} from 'storefrontapi.generated';
 import {HomeItem} from '~/components/HomeItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
 import groceryStore2 from '~/assets/images/grocery-2.webp';
 import swimmer from '~/assets/images/swimmer.webp';
+import gsap from 'gsap';
+import {useGSAP, type ReactRef} from '@gsap/react';
+import {SplitText} from 'gsap/SplitText';
+import {ScrollTrigger} from 'gsap/ScrollTrigger';
 
 export const meta: Route.MetaFunction = () => {
   return [{title: 'Hydrogen | Home'}];
@@ -43,6 +50,7 @@ function loadDeferredData({context}: Route.LoaderArgs) {
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
+
   return (
     <div className="mb-10 md:px-16">
       {data.isShopLinked ? null : <MockShopNotice />}
@@ -53,18 +61,100 @@ export default function Homepage() {
   );
 }
 
+let hasPlayedIntro = false;
+
 function HomePageHero() {
+  gsap.registerPlugin(SplitText);
+  const title = useRef<HTMLHeadingElement>(null);
+  const description = useRef<HTMLParagraphElement>(null);
+  const shopButton = useRef<HTMLAnchorElement>(null);
+  const heroImage = useRef<HTMLImageElement>(null);
+
+  useGSAP(() => {
+    if (hasPlayedIntro) return;
+    hasPlayedIntro = true;
+
+    void document.fonts.ready.then(() => {
+      const splitTitle = SplitText.create(title.current, {
+        type: 'chars lines ',
+        mask: 'lines',
+      });
+
+      const splitDescription = SplitText.create(description.current, {
+        type: 'words lines ',
+        mask: 'lines',
+      });
+
+      gsap
+        .timeline()
+        .fromTo(
+          heroImage.current,
+          {clipPath: 'inset(0 100% 0 0)'},
+          {
+            clipPath: 'inset(0 0% 0 0)',
+            duration: 0.5,
+            ease: 'power2.inOut',
+            clearProps: 'clipPath',
+          },
+        )
+        .from(splitTitle.chars, {
+          yPercent: 100,
+          duration: 0.5,
+          stagger: 0.05,
+          ease: 'power2.out',
+        })
+        .from(
+          splitDescription.words,
+          {
+            yPercent: 100,
+            duration: 0.5,
+            stagger: 0.05,
+            ease: 'power2.out',
+          },
+          '-=0.3',
+        )
+        .fromTo(
+          shopButton.current,
+          {clipPath: 'inset(0 100% 0 0)'},
+          {
+            clipPath: 'inset(0 0% 0 0)',
+            duration: 0.5,
+            ease: 'power2.inOut',
+            clearProps: 'clipPath',
+          },
+          '-=0.2',
+        )
+        .fromTo(
+          '.header',
+          {clipPath: 'inset(0 0 100% 0)'},
+          {
+            clipPath: 'inset(0 0 0% 0)',
+            duration: 1,
+            ease: 'power2.inOut',
+            clearProps: 'clipPath',
+          },
+        );
+    });
+  }, []);
+
   return (
     <section className="mt-6 grid gap-8 md:mt-10 md:grid-cols-2 md:items-center md:gap-0">
       <div className="flex flex-col gap-6 md:gap-12">
-        <h1 className="text-5xl md:text-8xl font-bold font-clash-display uppercase max-w-xl">
+        <h1
+          ref={title}
+          className="text-5xl md:text-8xl font-bold font-clash-display uppercase max-w-xl"
+        >
           Light kept on films.
         </h1>
-        <p className="text-lg md:text-2xl font-light font-clash-grotesk max-w-xl text-start">
+        <p
+          ref={description}
+          className="text-lg md:text-2xl font-light font-clash-grotesk max-w-xl text-start"
+        >
           Film photography, printed by hand in Paris. Every edition is exposed
           on 35mm and limited to 10 prints.
         </p>
         <Link
+          ref={shopButton}
           to="/collections/all"
           className="button-slide w-fit px-6 py-3 text-base md:px-8 md:py-4 md:text-xl uppercase font-normal font-clash-grotesk"
         >
@@ -72,6 +162,7 @@ function HomePageHero() {
         </Link>
       </div>
       <img
+        ref={heroImage}
         src={groceryStore2}
         alt="Customers at a corner grocery store, shot on 35mm film"
         decoding="async"
@@ -82,9 +173,27 @@ function HomePageHero() {
 }
 
 function HomePageHero2() {
+  const hero2Image = useRef<HTMLImageElement>(null);
+  useGSAP(() => {
+    gsap.fromTo(
+      hero2Image.current,
+      {clipPath: 'inset(0 100% 0 0)'},
+      {
+        clipPath: 'inset(0 0% 0 0)',
+        ease: 'power2.inOut',
+        scrollTrigger: {
+          trigger: hero2Image.current,
+          start: 'top 80%',
+          end: 'top 20%',
+          scrub: true,
+        },
+      },
+    );
+  }, []);
   return (
     <section className="grid gap-8 md:grid-cols-2 md:gap-16 md:items-center">
       <img
+        ref={hero2Image}
         src={swimmer}
         alt="A lone swimmer in open water"
         loading="lazy"
@@ -135,16 +244,46 @@ function RecommendedProducts({
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {(response) => (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8">
-              {response?.products?.nodes?.map((product) => (
-                <HomeItem key={product.id} product={product} />
-              ))}
-            </div>
+            <RecommendedGrid products={response?.products?.nodes ?? []} />
           )}
         </Await>
       </Suspense>
       <br />
     </section>
+  );
+}
+
+function RecommendedGrid({products}: {products: RecommendedProductFragment[]}) {
+  gsap.registerPlugin(ScrollTrigger);
+  const imageContainer = useRef<HTMLDivElement>(null);
+  useGSAP(
+    () => {
+      gsap.fromTo(
+        '.recommanded-product-image',
+        {clipPath: 'inset(0 100% 0 0)'},
+        {
+          clipPath: 'inset(0 0% 0 0)',
+          ease: 'power2.inOut',
+          scrollTrigger: {
+            trigger: imageContainer.current,
+            start: 'top 80%',
+            end: 'top 20%',
+            scrub: true,
+          },
+        },
+      );
+    },
+    {scope: imageContainer},
+  );
+  return (
+    <div
+      ref={imageContainer}
+      className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8"
+    >
+      {products.map((product) => (
+        <HomeItem key={product.id} product={product} />
+      ))}
+    </div>
   );
 }
 

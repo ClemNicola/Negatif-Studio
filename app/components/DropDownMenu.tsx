@@ -1,7 +1,7 @@
-import type {MouseEvent} from 'react';
 import {Link} from 'react-router';
 import {Image, Money} from '@shopify/hydrogen';
 import type {PrintsMenuQuery} from 'storefrontapi.generated';
+import {usePageTransition} from '~/components/TransitionPage';
 
 const HIDDEN_COLLECTIONS = ['all', 'frontpage'];
 
@@ -10,8 +10,9 @@ export function DropDownMenu({
   onClose,
 }: {
   menu: PrintsMenuQuery | null;
-  onClose: (event: MouseEvent<HTMLAnchorElement>) => void;
+  onClose: () => void;
 }) {
+  const {onCurtainClick} = usePageTransition();
   const collections = (menu?.collections.nodes ?? []).filter(
     (collection) => !HIDDEN_COLLECTIONS.includes(collection.handle),
   );
@@ -23,7 +24,7 @@ export function DropDownMenu({
         <Link
           to="/collections/all"
           prefetch="intent"
-          onClick={onClose}
+          onClick={onCurtainClick('/collections/all', onClose)}
           className="w-fit link-underline"
         >
           All prints
@@ -33,7 +34,10 @@ export function DropDownMenu({
             key={collection.handle}
             to={`/collections/${collection.handle}`}
             prefetch="intent"
-            onClick={onClose}
+            onClick={onCurtainClick(
+              `/collections/${collection.handle}`,
+              onClose,
+            )}
             className="w-fit link-underline"
           >
             {collection.title}
@@ -45,7 +49,7 @@ export function DropDownMenu({
         <Link
           to={`/products/${featured.handle}`}
           prefetch="intent"
-          onClick={onClose}
+          onClick={onCurtainClick(`/products/${featured.handle}`, onClose)}
           className="flex items-start gap-8"
         >
           <div className="pt-1 text-left">

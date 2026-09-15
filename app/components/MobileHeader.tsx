@@ -24,7 +24,7 @@ const HIDDEN_COLLECTIONS = ['all', 'frontpage'];
 export function MobileHeader({shop, cart, printsMenu}: MobileHeaderProps) {
   const {type, open, close} = useAside();
   const isMenuOpen = type === 'mobile';
-  const {navigateWithCurtain} = usePageTransition();
+  const {onCurtainClick} = usePageTransition();
   return (
     <>
       <header className="mobile-header">
@@ -41,19 +41,7 @@ export function MobileHeader({shop, cart, printsMenu}: MobileHeaderProps) {
         <NavLink
           className="mobile-header-logo font-clash-display"
           end
-          onClick={(event) => {
-            if (
-              event.button !== 0 ||
-              event.metaKey ||
-              event.ctrlKey ||
-              event.shiftKey
-            ) {
-              return;
-            }
-            event.preventDefault();
-            navigateWithCurtain('/');
-            close();
-          }}
+          onClick={onCurtainClick('/', close)}
           prefetch="intent"
           to="/"
         >
@@ -89,7 +77,7 @@ function MobileMenu({
   onClose: () => void;
   printsMenu: Promise<PrintsMenuQuery | null>;
 }) {
-  const {navigateWithCurtain} = usePageTransition();
+  const {onCurtainClick} = usePageTransition();
   return (
     <div
       className={`mobile-menu${isOpen ? ' expanded' : ''}`}
@@ -106,20 +94,7 @@ function MobileMenu({
                 <>
                   <NavLink
                     className="mobile-menu-sublink"
-                    onClick={(event) => {
-                      if (
-                        event.button !== 0 ||
-                        event.metaKey ||
-                        event.ctrlKey ||
-                        event.shiftKey
-                      ) {
-                        onClose();
-                        return;
-                      }
-                      event.preventDefault();
-                      navigateWithCurtain('/collections/all');
-                      onClose();
-                    }}
+                    onClick={onCurtainClick('/collections/all', onClose)}
                     prefetch="intent"
                     to="/collections/all"
                   >
@@ -134,22 +109,10 @@ function MobileMenu({
                       <NavLink
                         className="mobile-menu-sublink"
                         key={collection.handle}
-                        onClick={(event) => {
-                          if (
-                            event.button !== 0 ||
-                            event.metaKey ||
-                            event.ctrlKey ||
-                            event.shiftKey
-                          ) {
-                            onClose();
-                            return;
-                          }
-                          event.preventDefault();
-                          navigateWithCurtain(
-                            `/collections/${collection.handle}`,
-                          );
-                          onClose();
-                        }}
+                        onClick={onCurtainClick(
+                          `/collections/${collection.handle}`,
+                          onClose,
+                        )}
                         prefetch="intent"
                         to={`/collections/${collection.handle}`}
                       >
@@ -165,20 +128,7 @@ function MobileMenu({
         <NavLink
           className="mobile-menu-link"
           end
-          onClick={(event) => {
-            if (
-              event.button !== 0 ||
-              event.metaKey ||
-              event.ctrlKey ||
-              event.shiftKey
-            ) {
-              onClose();
-              return;
-            }
-            event.preventDefault();
-            navigateWithCurtain('/studio');
-            onClose();
-          }}
+          onClick={onCurtainClick('/studio', onClose)}
           prefetch="intent"
           to="/studio"
         >
