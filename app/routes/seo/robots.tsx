@@ -1,4 +1,4 @@
-import type {Route} from './+types/[robots.txt]';
+import type {Route} from './+types/robots';
 
 export function loader({request}: Route.LoaderArgs) {
   const url = new URL(request.url);
