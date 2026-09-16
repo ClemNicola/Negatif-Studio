@@ -9,6 +9,10 @@
 }
 
 @layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
   body {
     font-family: var(--font-clash-grotesk);
     color: var(--color-text);

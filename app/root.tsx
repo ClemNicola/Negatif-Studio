@@ -16,6 +16,7 @@ import {HEADER_QUERY, PRINTS_MENU_QUERY} from '~/lib/fragments';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
+import lenisStyles from 'lenis/dist/lenis.css?url';
 import {PageLayout} from './components/PageLayout';
 
 export type RootLoader = typeof loader;
@@ -149,6 +150,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
         <link rel="stylesheet" href={tailwindCss}></link>
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
+        <link rel="stylesheet" href={lenisStyles}></link>
         <link
           rel="preload"
           href="/fonts/clash_display/ClashDisplay-Variable.woff2"
