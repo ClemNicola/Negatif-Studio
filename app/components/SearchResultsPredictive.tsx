@@ -107,6 +107,7 @@ function SearchResultsPredictiveArticles({
                     src={article.image.url}
                     width={48}
                     height={64}
+                    sizes="48px"
                   />
                 )}
                 <span className="predictive-search-result-title">
@@ -148,6 +149,7 @@ function SearchResultsPredictiveCollections({
                     src={collection.image.url}
                     width={48}
                     height={64}
+                    sizes="48px"
                   />
                 )}
                 <span className="predictive-search-result-title">
@@ -224,6 +226,7 @@ function SearchResultsPredictiveProducts({
                     src={image.url}
                     width={48}
                     height={64}
+                    sizes="48px"
                   />
                 )}
                 <div className="flex flex-col gap-1">

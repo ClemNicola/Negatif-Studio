@@ -65,6 +65,7 @@ export function DropDownMenu({
                 data={featured.featuredImage}
                 alt={featured.featuredImage.altText || featured.title}
                 className="h-full w-full object-cover"
+                sizes="144px"
               />
             </div>
           ) : null}

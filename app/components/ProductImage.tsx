@@ -1,6 +1,14 @@
 import type {ProductFragment} from 'storefrontapi.generated';
 import {Image} from '@shopify/hydrogen';
 
+const PRODUCT_IMAGE_SIZES = '(min-width: 48em) calc(50vw - 6rem), 100vw';
+const PRODUCT_IMAGE_SRCSET = {
+  intervals: 5,
+  startingWidth: 200,
+  incrementSize: 200,
+  placeholderWidth: 100,
+};
+
 export function ProductImage({
   media,
 }: {
@@ -18,9 +26,10 @@ export function ProductImage({
             alt={node.alt || 'Product Image'}
             data={node.image}
             key={node.id}
-            sizes="(min-width: 48em) 50vw, 100vw"
+            sizes={PRODUCT_IMAGE_SIZES}
+            srcSetOptions={PRODUCT_IMAGE_SRCSET}
             loading={index === 0 ? 'eager' : 'lazy'}
-            fetchPriority={index === 0 ? 'high' : undefined}
+            {...(index === 0 ? {fetchpriority: 'high'} : {})}
           />
         ) : null,
       )}
