@@ -6,6 +6,7 @@ import type {
   RecommendedProductFragment,
 } from 'storefrontapi.generated';
 import {useVariantUrl} from '~/lib/variants';
+import {usePageTransition} from '~/components/TransitionPage';
 
 export function HomeItem({
   product,
@@ -16,12 +17,18 @@ export function HomeItem({
   loading?: 'eager' | 'lazy';
 }) {
   const variantUrl = useVariantUrl(product.handle);
+  const {onCurtainClick} = usePageTransition();
   const image = product.featuredImage;
   return (
     <div className="product-item">
-      <Link className="group block" prefetch="intent" to={variantUrl}>
+      <Link
+        className="group block"
+        prefetch="intent"
+        to={variantUrl}
+        onClick={onCurtainClick(variantUrl)}
+      >
         {image && (
-          <div className="relative overflow-hidden">
+          <div className="recommanded-product-image relative overflow-hidden">
             <Image
               className="hover:image-invert transition-all duration-300"
               alt={image.altText || product.title}

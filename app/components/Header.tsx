@@ -1,4 +1,4 @@
-import {Suspense, useState, type MouseEvent} from 'react';
+import {Suspense, useState} from 'react';
 import {Await, NavLink, useAsyncValue} from 'react-router';
 import {
   type CartViewPayload,
@@ -31,24 +31,13 @@ const HEADER_NAV = [
 
 export function Header({header, isLoggedIn, cart, printsMenu}: HeaderProps) {
   const {shop} = header;
-  const {navigateWithCurtain} = usePageTransition();
+  const {onCurtainClick} = usePageTransition();
   return (
     <>
       <header className="header">
         <HeaderMenu viewport="desktop" printsMenu={printsMenu} />
         <NavLink
-          onClick={(event) => {
-            if (
-              event.button !== 0 ||
-              event.metaKey ||
-              event.ctrlKey ||
-              event.shiftKey
-            ) {
-              return;
-            }
-            event.preventDefault();
-            navigateWithCurtain('/');
-          }}
+          onClick={onCurtainClick('/')}
           prefetch="intent"
           to="/"
           className="text-3xl font-extrabold font-clash-display tracking-wider uppercase"
@@ -72,14 +61,11 @@ export function HeaderMenu({
 }) {
   const {close} = useAside();
   const [isDropdownDismissed, setIsDropdownDismissed] = useState(false);
-  const {navigateWithCurtain} = usePageTransition();
+  const {onCurtainClick} = usePageTransition();
 
-  const handleDropdownClick = (event: MouseEvent<HTMLAnchorElement>) => {
+  const dismissDropdown = () => {
     close();
-    if (event.detail > 0) {
-      event.currentTarget.blur();
-      setIsDropdownDismissed(true);
-    }
+    setIsDropdownDismissed(true);
   };
 
   return (
@@ -93,20 +79,7 @@ export function HeaderMenu({
             className="header-menu-item link-underline"
             end
             key={item.to}
-            onClick={(event) => {
-              if (
-                event.button !== 0 ||
-                event.metaKey ||
-                event.ctrlKey ||
-                event.shiftKey
-              ) {
-                close();
-                return;
-              }
-              event.preventDefault();
-              navigateWithCurtain(item.to);
-              close();
-            }}
+            onClick={onCurtainClick(item.to, close)}
             prefetch="intent"
             style={activeLinkStyle}
             to={item.to}
@@ -132,7 +105,7 @@ export function HeaderMenu({
               <Suspense fallback={null}>
                 <Await resolve={printsMenu}>
                   {(menu) => (
-                    <DropDownMenu menu={menu} onClose={handleDropdownClick} />
+                    <DropDownMenu menu={menu} onClose={dismissDropdown} />
                   )}
                 </Await>
               </Suspense>
@@ -148,6 +121,7 @@ function HeaderCtas({
   isLoggedIn,
   cart,
 }: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
+  const {onCurtainClick} = usePageTransition();
   return (
     <nav className="header-ctas  font-clash-grotesk text-xl" role="navigation">
       <Suspense fallback={null}>
@@ -159,6 +133,7 @@ function HeaderCtas({
                 to="/account"
                 className="link-underline"
                 style={activeLinkStyle}
+                onClick={onCurtainClick('/account')}
               >
                 Account
               </NavLink>
