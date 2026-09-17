@@ -1,5 +1,5 @@
 import {redirect, useLoaderData} from 'react-router';
-import type {Route} from './+types/($locale).products.$handle';
+import type {Route} from './+types/$handle';
 import {
   getSelectedProductOptions,
   Analytics,

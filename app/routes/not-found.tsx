@@ -1,4 +1,4 @@
-import type {Route} from './+types/$';
+import type {Route} from './+types/not-found';
 
 export async function loader({request}: Route.LoaderArgs) {
   throw new Response(`${new URL(request.url).pathname} not found`, {

@@ -9,7 +9,8 @@ Boutique de tirages argentiques sur Shopify Hydrogen.
 1. **Fonctionnel avant craft.** Un flow commerce qui marche prime sur toute anim ou polish.
 2. **Un front à la fois.** Ne jamais se battre sur deux chantiers en parallèle (ex : apprendre le framework _et_ produire des assets).
 3. **Time-box les assets.** La prod de mockups/photos ne doit jamais repousser le code. C'est ce qui a tué Eden.
-4. **FR d'abord.** Le i18n est une feature de phase tardive, pas une fondation.
+4. **EN d'abord.** Le site est en anglais — c'est la langue de la vitrine portfolio.
+   Le i18n FR est une feature de phase tardive, pas une fondation.
 5. **Ne pas sur-construire.** Pas de Stripe custom, pas de blog, pas de newsletter. Hors scope, définitivement.
 
 ---
@@ -33,7 +34,7 @@ Objectif : environnement vivant, tes vraies données qui remontent en local.
 
 ## Phase 1 — Le corps fonctionnel (LE cœur)
 
-En français, zéro animation, design brutaliste déjà défini. C'est 80% de la valeur.
+En anglais, zéro animation, design brutaliste déjà défini. C'est 80% de la valeur.
 
 ### 1.1 — Layout global
 
@@ -72,7 +73,7 @@ En français, zéro animation, design brutaliste déjà défini. C'est 80% de la
 - [x] Studio (histoire de la marque) — hardcodée, verrouillée
 - [ ] Contact — simple
 
-**Règle d'or :** tout en FR, tout en dur pour le narratif, aucune anim. Debugger sur une base sobre.
+**Règle d'or :** tout en EN, tout en dur pour le narratif, aucune anim. Debugger sur une base sobre.
 **Fini quand :** je navigue → je choisis un tirage → je règle format + finition → le prix est juste → j'ajoute au panier → j'arrive au checkout Shopify. De bout en bout.
 
 ---
@@ -120,17 +121,35 @@ Objectif : la cerise. Dans l'ordre, du sûr au risqué.
 
 ---
 
-## Phase 5 — i18n FR/EN (feature portfolio, optionnelle)
+## Phase 5 — i18n FR/EN — **repoussée** (décision du 16/09/2026)
 
 Objectif : montrer du i18n propre. Seulement si le reste est solide.
 
-- [ ] `npx shopify hydrogen setup markets` → structure **Subfolders** (`/fr/`, `/en/`)
-- [ ] Sélecteur de langue
-- [ ] Traduction des textes hardcodés (fr/en)
+**Statut : pas fait, volontairement.** Le site est déjà 100% en anglais, donc l'i18n
+reviendrait à ajouter une couche FR par-dessus. Chiffré avant de trancher :
+
+- ~76 strings UI uniques sur 13 fichiers
+- ~530 mots de copy narrative sur la page Studio (voix de marque, pas du texte jetable)
+- l'infra de routing, elle, est **déjà là** : segment `:locale?` dans `app/routes.ts`,
+  `getLocaleFromRequest()` dans `app/lib/i18n.ts`, `@inContext` sur la Storefront API
+
+**Pourquoi on ne le fait pas maintenant :** les produits, titres de collections et
+descriptions viennent de l'admin Shopify. Sans **Translate & Adapt** configuré *et*
+les traductions réellement saisies, basculer en FR donne une nav française autour de
+produits restés en anglais. Un recruteur qui clique sur le sélecteur voit un truc
+cassé — ça dessert plus que l'absence de la feature.
+
+La Phase 3 (SEO, perf, metafields) pèse plus lourd auprès d'une agence. On y va d'abord.
+
+**Si on le reprend un jour :**
+
+- [ ] Translate & Adapt côté admin **avant** le code (sinon switcher bâtard)
+- [ ] Locales typées + sélecteur de langue
+- [ ] Traduction des textes hardcodés (en/fr)
 - [ ] 1 marché Europe, 1 devise (€). Pas de multi-devise.
 
 **Règle d'or :** on traduit du contenu qui existe déjà, jamais du vide. C'est la dernière couche.
-**Fini quand :** je bascule FR ↔ EN, les URLs sont propres, les prix restent en €.
+**Fini quand :** je bascule EN ↔ FR, les URLs sont propres, les prix restent en €.
 
 ---
 
@@ -145,4 +164,10 @@ Objectif : montrer du i18n propre. Seulement si le reste est solide.
 
 ## Argument d'entretien à préparer
 
-« J'ai construit un storefront headless complet sur Hydrogen/Oxygen — collections dynamiques, variants couleur×taille avec prix au variant, cart, i18n, View Transitions. Le produit c'est mes tirages argentiques, mais l'archi se transpose telle quelle à n'importe quel catalogue. »
+« J'ai construit un storefront headless complet sur Hydrogen/Oxygen — collections dynamiques, variants couleur×taille avec prix au variant, cart, View Transitions. Le produit c'est mes tirages argentiques, mais l'archi se transpose telle quelle à n'importe quel catalogue. »
+
+> ⚠️ Ne pas revendiquer l'i18n tant que la Phase 5 n'est pas faite. En revanche, le
+> *raisonnement* sur l'i18n est lui-même un bon sujet d'entretien : l'infra de routing
+> locale est en place, et j'ai choisi de ne pas livrer la traduction parce qu'un
+> sélecteur de langue sans Translate & Adapt derrière donne une démo cassée. Savoir
+> ne pas livrer une feature à moitié, ça s'argumente très bien.
