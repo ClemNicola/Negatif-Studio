@@ -2,6 +2,7 @@ import rain from '~/assets/images/rain.webp';
 import plane from '~/assets/images/plane.webp';
 import waterLily from '~/assets/images/water_lily.webp';
 import bath from '~/assets/images/bath.webp';
+import type {Route} from './+types/index';
 
 const PROCESS_STEPS = [
   {
@@ -29,6 +30,21 @@ const PROCESS_STEPS = [
     alt: 'Swimmers seen from above between rocks off the coast',
   },
 ];
+
+export const meta: Route.MetaFunction = () => {
+  const title = 'Negatif Studio | We work back from the negative';
+  const description =
+    'Negatif Studio is a gallery for photographs that never touched a sensor. Expired stock, pushed two stops, printed wet in a darkroom in the 10th arrondissement of Paris.';
+  return [
+    {title},
+    {name: 'description', content: description},
+    {property: 'og:type', content: 'website'},
+    {property: 'og:site_name', content: 'Negatif Studio'},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+    {property: 'og:image', content: rain},
+  ];
+};
 
 export default function Studio() {
   return (

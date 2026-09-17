@@ -9,7 +9,15 @@ import {getCatalogSort, getSortValue} from '~/lib/sort';
 import type {CollectionItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: `Hydrogen | Products`}];
+  const title = 'Negatif Studio | Prints';
+  const description =
+    'Film photography printed by hand in Paris. Every edition is shot on 35mm and limited to 20 prints.';
+  return [
+    {title},
+    {name: 'description', content: description},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {

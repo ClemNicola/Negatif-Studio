@@ -1,4 +1,4 @@
-import {redirect, useLoaderData} from 'react-router';
+import {data, redirect, useLoaderData} from 'react-router';
 import type {Route} from './+types/$handle';
 import {
   getSelectedProductOptions,
@@ -12,16 +12,27 @@ import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
-export const meta: Route.MetaFunction = ({
-  data,
-}: {
-  data: {product: {title: string; handle: string}};
-}) => {
+export const meta: Route.MetaFunction = ({data}) => {
+  const product = data?.product;
+  if (!product) {
+    return [{title: 'Negatif Studio'}];
+  }
+
+  const title = product.seo?.title || `${product.title} | Negatif Studio`;
+  const description = product.seo?.description || product.description;
+  const image = product.selectedOrFirstAvailableVariant?.image?.url;
   return [
-    {title: `Hydrogen | ${data?.product.title ?? ''}`},
+    {title},
+    {name: 'description', content: description},
+    {property: 'og:type', content: 'website'},
+    {property: 'og:site_name', content: 'Negatif Studio'},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+    ...(image ? [{property: 'og:image', content: image}] : []),
     {
+      tagName: 'link' as const,
       rel: 'canonical',
-      href: `/products/${data?.product.handle}`,
+      href: `/products/${product.handle}`,
     },
   ];
 };
@@ -29,8 +40,6 @@ export const meta: Route.MetaFunction = ({
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
   const deferredData = loadDeferredData(args);
-
-  // Await the critical data required to render initial state of the page
   const criticalData = await loadCriticalData(args);
 
   return {...deferredData, ...criticalData};

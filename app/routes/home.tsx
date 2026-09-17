@@ -1,5 +1,5 @@
 import {Await, useLoaderData, Link} from 'react-router';
-import type {Route} from './+types/_index';
+import type {Route} from './+types/home';
 import {Suspense, useRef} from 'react';
 import type {
   RecommendedProductFragment,
@@ -15,12 +15,21 @@ import {SplitText} from 'gsap/SplitText';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 
 export const meta: Route.MetaFunction = () => {
-  return [{title: 'Hydrogen | Home'}];
+  const title = 'Negatif Studio | 35mm prints, handmade in Paris';
+  const description =
+    'Film photography printed by hand in Paris. Every edition is shot on 35mm and limited to 10 prints. When a run closes, the negative is filed for good.';
+  return [
+    {title},
+    {name: 'description', content: description},
+    {property: 'og:type', content: 'website'},
+    {property: 'og:site_name', content: 'Negatif Studio'},
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
+    {property: 'og:image', content: groceryStore2},
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {
-  // Nothing above the fold needs the Storefront API, so the page streams
-  // immediately and the products below resolve later.
   const deferredData = loadDeferredData(args);
 
   return {
@@ -151,7 +160,7 @@ function HomePageHero() {
           className="text-lg md:text-2xl font-light font-clash-grotesk max-w-xl text-start"
         >
           Film photography, printed by hand in Paris. Every edition is exposed
-          on 35mm and limited to 10 prints.
+          on 35mm and limited to 20 prints.
         </p>
         <Link
           ref={shopButton}
