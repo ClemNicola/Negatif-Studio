@@ -42,7 +42,7 @@ export const meta: Route.MetaFunction = () => {
     {property: 'og:site_name', content: 'Negatif Studio'},
     {property: 'og:title', content: title},
     {property: 'og:description', content: description},
-    {property: 'og:image', content: origin + rain},
+    {property: 'og:image', content: rain},
   ];
 };
 
