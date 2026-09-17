@@ -10,7 +10,23 @@ import {getCollectionSort, getSortValue} from '~/lib/sort';
 import type {ProductItemFragment} from 'storefrontapi.generated';
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.collection.title ?? ''} Collection`}];
+  const collection = data?.collection;
+  if (!collection) {
+    return [{title: 'Negatif Studio'}];
+  }
+  const title = `${collection.title} - Negatif Studio`;
+  const description = collection.description;
+  return [
+    {title},
+    {name: 'description', content: description},
+    {name: 'og:title', content: title},
+    {name: 'og:description', content: description},
+    {
+      tagName: 'link' as const,
+      rel: 'canonical',
+      href: `/collections/${collection.handle}`,
+    },
+  ];
 };
 
 export async function loader(args: Route.LoaderArgs) {
