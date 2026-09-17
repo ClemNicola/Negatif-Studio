@@ -16,6 +16,7 @@ import {
 } from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 import TransitionPage from './TransitionPage';
+import {SmoothScroll} from '~/components/SmoothScroll';
 interface PageLayoutProps {
   cart: Promise<CartApiQueryFragment | null>;
   header: HeaderQuery;
@@ -34,20 +35,22 @@ export function PageLayout({
 }: PageLayoutProps) {
   return (
     <Aside.Provider>
-      <TransitionPage>
-        <CartAside cart={cart} />
-        <SearchAside />
-        {header && (
-          <Header
-            header={header}
-            cart={cart}
-            isLoggedIn={isLoggedIn}
-            printsMenu={printsMenu}
-          />
-        )}
-        <main>{children}</main>
-        <Footer />
-      </TransitionPage>
+      <SmoothScroll>
+        <TransitionPage>
+          <CartAside cart={cart} />
+          <SearchAside />
+          {header && (
+            <Header
+              header={header}
+              cart={cart}
+              isLoggedIn={isLoggedIn}
+              printsMenu={printsMenu}
+            />
+          )}
+          <main>{children}</main>
+          <Footer />
+        </TransitionPage>
+      </SmoothScroll>
     </Aside.Provider>
   );
 }
