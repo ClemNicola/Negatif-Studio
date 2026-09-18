@@ -102,6 +102,11 @@ export default function Product() {
         <h1 className="text-3xl md:text-4xl font-bold font-clash-display">
           {title}
         </h1>
+        <div className="flex gap-2 items-center font-light text-text/60 font-clash-grotesk text-xs md:text-base">
+          <p>
+            {product.place?.value}, {product.year?.value}, {product.film?.value}
+          </p>
+        </div>
         <div
           className="font-clash-grotesk text-base md:text-lg font-light my-4 max-w-xl"
           dangerouslySetInnerHTML={{__html: descriptionHtml}}
@@ -177,6 +182,18 @@ const PRODUCT_FRAGMENT = `#graphql
     description
     encodedVariantExistence
     encodedVariantAvailability
+    year: metafield(namespace: "custom", key: "year") {
+      value
+      type
+    }
+    film: metafield(namespace: "custom", key: "film") {
+      value
+      type
+    }
+    place: metafield(namespace: "custom", key: "place") {
+      value
+      type
+    }
     options {
       name
       optionValues {
