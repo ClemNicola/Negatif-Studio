@@ -83,7 +83,7 @@ function CollectionItem({
           alt={collection.image.altText || collection.title}
           aspectRatio="1/1"
           data={collection.image}
-          loading={index < 3 ? 'eager' : undefined}
+          loading={index < 3 ? 'eager' : 'lazy'}
           sizes="(min-width: 45em) 400px, 100vw"
         />
       )}

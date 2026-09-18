@@ -13,10 +13,9 @@ import {
 import type {Route} from './+types/root';
 import favicon from '~/assets/favicon.svg';
 import {HEADER_QUERY, PRINTS_MENU_QUERY} from '~/lib/fragments';
-import resetStyles from '~/styles/reset.css?url';
-import appStyles from '~/styles/app.css?url';
-import tailwindCss from './styles/tailwind.css?url';
-import lenisStyles from 'lenis/dist/lenis.css?url';
+import styles from '~/styles/index.css?url';
+import clashDisplay from '~/assets/fonts/clash_display/ClashDisplay-Variable.woff2?url';
+import clashGrotesk from '~/assets/fonts/clash_grotesk/ClashGrotesk-Variable.woff2?url';
 import {PageLayout} from './components/PageLayout';
 
 export type RootLoader = typeof loader;
@@ -64,6 +63,20 @@ export function links() {
       href: 'https://shop.app',
     },
     {rel: 'icon', type: 'image/svg+xml', href: favicon},
+    {
+      rel: 'preload',
+      href: clashDisplay,
+      as: 'font',
+      type: 'font/woff2',
+      crossOrigin: 'anonymous' as const,
+    },
+    {
+      rel: 'preload',
+      href: clashGrotesk,
+      as: 'font',
+      type: 'font/woff2',
+      crossOrigin: 'anonymous' as const,
+    },
   ];
 }
 
@@ -147,24 +160,7 @@ export function Layout({children}: {children?: React.ReactNode}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="stylesheet" href={tailwindCss}></link>
-        <link rel="stylesheet" href={resetStyles}></link>
-        <link rel="stylesheet" href={appStyles}></link>
-        <link rel="stylesheet" href={lenisStyles}></link>
-        <link
-          rel="preload"
-          href="/fonts/clash_display/ClashDisplay-Variable.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
-        <link
-          rel="preload"
-          href="/fonts/clash_grotesk/ClashGrotesk-Variable.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin="anonymous"
-        />
+        <link rel="stylesheet" href={styles}></link>
         <Meta />
         <Links />
       </head>

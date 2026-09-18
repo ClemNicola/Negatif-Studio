@@ -3,9 +3,9 @@ import {Image} from '@shopify/hydrogen';
 
 const PRODUCT_IMAGE_SIZES = '(min-width: 48em) calc(50vw - 6rem), 100vw';
 const PRODUCT_IMAGE_SRCSET = {
-  intervals: 5,
-  startingWidth: 200,
-  incrementSize: 200,
+  intervals: 8,
+  startingWidth: 300,
+  incrementSize: 250,
   placeholderWidth: 100,
 };
 
