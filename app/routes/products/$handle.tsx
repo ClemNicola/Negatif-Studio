@@ -31,11 +31,6 @@ export const meta: Route.MetaFunction = ({data}) => {
     {property: 'og:title', content: title},
     {property: 'og:description', content: description},
     ...(image ? [{property: 'og:image', content: image}] : []),
-    {
-      tagName: 'link' as const,
-      rel: 'canonical',
-      href: `/products/${product.handle}`,
-    },
   ];
 };
 
@@ -108,7 +103,8 @@ export default function Product() {
           </h1>
           <div className="flex gap-2 items-center font-light text-text/60 font-clash-grotesk text-xs md:text-base">
             <p>
-              {product.place?.value}, {product.year?.value}, {product.film?.value}
+              {product.place?.value}, {product.year?.value},{' '}
+              {product.film?.value}
             </p>
           </div>
           <div
