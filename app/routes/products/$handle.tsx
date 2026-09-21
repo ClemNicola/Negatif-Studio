@@ -1,5 +1,6 @@
-import {data, redirect, useLoaderData} from 'react-router';
+import {redirect, useLoaderData, Await} from 'react-router';
 import type {Route} from './+types/$handle';
+import {Suspense} from 'react';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -10,6 +11,7 @@ import {
 } from '@shopify/hydrogen';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
+import {ProductItem} from '~/components/ProductItem';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: Route.MetaFunction = ({data}) => {
@@ -39,10 +41,18 @@ export const meta: Route.MetaFunction = ({data}) => {
 
 export async function loader(args: Route.LoaderArgs) {
   // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
   const criticalData = await loadCriticalData(args);
 
-  return {...deferredData, ...criticalData};
+  const recommendedProducts = args.context.storefront
+    .query(PRODUCT_RECOMMENDATIONS_QUERY, {
+      variables: {productId: criticalData.product.id},
+    })
+    .catch((error: Error) => {
+      console.error(error);
+      return null;
+    });
+
+  return {...criticalData, recommendedProducts};
 }
 
 async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
@@ -71,15 +81,8 @@ async function loadCriticalData({context, params, request}: Route.LoaderArgs) {
   };
 }
 
-function loadDeferredData({context, params}: Route.LoaderArgs) {
-  // Put any API calls that is not critical to be available on first page render
-  // For example: product reviews, product recommendations, social feeds.
-
-  return {};
-}
-
 export default function Product() {
-  const {product} = useLoaderData<typeof loader>();
+  const {product, recommendedProducts} = useLoaderData<typeof loader>();
 
   const selectedVariant = useOptimisticVariant(
     product.selectedOrFirstAvailableVariant,
@@ -96,44 +99,96 @@ export default function Product() {
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product my-6 md:my-10 md:px-16">
-      <ProductImage media={product.media.nodes} />
-      <div className="product-main">
-        <h1 className="text-3xl md:text-4xl font-bold font-clash-display">
-          {title}
-        </h1>
-        <div className="flex gap-2 items-center font-light text-text/60 font-clash-grotesk text-xs md:text-base">
-          <p>
-            {product.place?.value}, {product.year?.value}, {product.film?.value}
-          </p>
+    <div className="my-6 md:my-10 md:px-16">
+      <div className="product">
+        <ProductImage media={product.media.nodes} />
+        <div className="product-main">
+          <h1 className="text-3xl md:text-4xl font-bold font-clash-display">
+            {title}
+          </h1>
+          <div className="flex gap-2 items-center font-light text-text/60 font-clash-grotesk text-xs md:text-base">
+            <p>
+              {product.place?.value}, {product.year?.value}, {product.film?.value}
+            </p>
+          </div>
+          <div
+            className="font-clash-grotesk text-base md:text-lg font-light my-4 max-w-xl"
+            dangerouslySetInnerHTML={{__html: descriptionHtml}}
+          />
+          <ProductForm
+            productOptions={productOptions}
+            selectedVariant={selectedVariant}
+          />
         </div>
-        <div
-          className="font-clash-grotesk text-base md:text-lg font-light my-4 max-w-xl"
-          dangerouslySetInnerHTML={{__html: descriptionHtml}}
-        />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
+        <Analytics.ProductView
+          data={{
+            products: [
+              {
+                id: product.id,
+                title: product.title,
+                price: selectedVariant?.price.amount || '0',
+                vendor: product.vendor,
+                variantId: selectedVariant?.id || '',
+                variantTitle: selectedVariant?.title || '',
+                quantity: 1,
+              },
+            ],
+          }}
         />
       </div>
-      <Analytics.ProductView
-        data={{
-          products: [
-            {
-              id: product.id,
-              title: product.title,
-              price: selectedVariant?.price.amount || '0',
-              vendor: product.vendor,
-              variantId: selectedVariant?.id || '',
-              variantTitle: selectedVariant?.title || '',
-              quantity: 1,
-            },
-          ],
-        }}
-      />
+
+      <Suspense fallback={null}>
+        <Await resolve={recommendedProducts}>
+          {(response) => {
+            const items = (response?.productRecommendations ?? [])
+              .filter((item) => item.id !== product.id)
+              .slice(0, 3);
+            if (!items.length) return null;
+            return (
+              <section className="mt-16">
+                <h2 className="text-lg md:text-4xl font-bold font-clash-display uppercase pb-4 md:pb-8">
+                  You may also like
+                </h2>
+                <div className="products-grid">
+                  {items.map((item) => (
+                    <ProductItem key={item.id} product={item} />
+                  ))}
+                </div>
+              </section>
+            );
+          }}
+        </Await>
+      </Suspense>
     </div>
   );
 }
+
+const PRODUCT_RECOMMENDATIONS_QUERY = `#graphql
+  query ProductRecommendations(
+    $productId: ID!
+    $country: CountryCode
+    $language: LanguageCode
+  ) @inContext(country: $country, language: $language) {
+    productRecommendations(productId: $productId, intent: RELATED) {
+      id
+      title
+      handle
+      featuredImage {
+        id
+        url
+        altText
+        width
+        height
+      }
+      priceRange {
+        minVariantPrice {
+          amount
+          currencyCode
+        }
+      }
+    }
+  }
+` as const;
 
 const PRODUCT_VARIANT_FRAGMENT = `#graphql
   fragment ProductVariant on ProductVariant {
