@@ -1,28 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none">
-  <style>
-    .stroke {
-      stroke: #000;
-    }
-    .fill {
-      fill: #000;
-    }
-    @media (prefers-color-scheme: dark) {
-      .stroke {
-        stroke: #fff;
-      }
-      .fill {
-        fill: #fff;
-      }
-    }
-  </style>
-  <path
-    class="stroke"
-    fill-rule="evenodd"
-    d="M16.1 16.04 1 8.02 6.16 5.3l5.82 3.09 4.88-2.57-5.82-3.1L16.21 0l15.1 8.02-5.17 2.72-5.5-2.91-4.88 2.57 5.5 2.92-5.16 2.72Z"
-  />
-  <path
-    class="fill"
-    fill-rule="evenodd"
-    d="M16.1 32 1 23.98l5.16-2.72 5.82 3.08 4.88-2.57-5.82-3.08 5.17-2.73 15.1 8.02-5.17 2.72-5.5-2.92-4.88 2.58 5.5 2.92L16.1 32Z"
-  />
+<svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="110" cy="110" r="110" fill="#F5F5F5"/>
+<path d="M59.779 151H35.715V65.24H61.315L85.123 97.368L97.667 117.08H99.331L98.179 98.392V65.24H122.243V151H96.643L71.299 117.976L60.419 101.08H58.755L59.779 117.464V151ZM201.728 123.224H147.84V102.744H201.728V123.224Z" fill="#1D1D1F"/>
 </svg>
