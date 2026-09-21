@@ -1,10 +1,21 @@
-import rain from '~/assets/images/rain.webp';
-import plane from '~/assets/images/plane.webp';
-import waterLily from '~/assets/images/water_lily.webp';
-import bath from '~/assets/images/bath.webp';
+import {
+  bath,
+  plane,
+  rain,
+  waterLily,
+  type LocalImage,
+} from '~/assets/images/generated';
 import type {Route} from './+types/index';
 
-const PROCESS_STEPS = [
+const IMAGE_SIZES = '(min-width: 48em) 50vw, 100vw';
+
+const PROCESS_STEPS: {
+  title: string;
+  lead: string;
+  detail: string;
+  image: LocalImage;
+  alt: string;
+}[] = [
   {
     title: 'Expose',
     lead: '35mm only, handheld, in whatever light is already there. One roll per outing — thirty-six frames, no bracketing, no second attempt.',
@@ -42,9 +53,21 @@ export const meta: Route.MetaFunction = () => {
     {property: 'og:site_name', content: 'Negatif Studio'},
     {property: 'og:title', content: title},
     {property: 'og:description', content: description},
-    {property: 'og:image', content: rain},
+    {property: 'og:image', content: rain.src},
   ];
 };
+
+export function links() {
+  return [
+    {
+      rel: 'preload',
+      as: 'image',
+      imageSrcSet: rain.srcSet,
+      imageSizes: IMAGE_SIZES,
+      fetchPriority: 'high',
+    },
+  ];
+}
 
 export default function Studio() {
   return (
@@ -76,8 +99,13 @@ function StudioHero() {
         </p>
       </div>
       <img
-        src={rain}
+        src={rain.src}
+        srcSet={rain.srcSet}
+        sizes={IMAGE_SIZES}
+        width={rain.width}
+        height={rain.height}
         alt="Rain on a window, shot on 35mm film"
+        fetchPriority="high"
         decoding="async"
         className="aspect-4/5 w-full object-cover grayscale md:aspect-9/16 md:h-full md:max-h-[600px]"
       />
@@ -121,7 +149,11 @@ function ProcessStep({
         </p>
       </div>
       <img
-        src={step.image}
+        src={step.image.src}
+        srcSet={step.image.srcSet}
+        sizes={IMAGE_SIZES}
+        width={step.image.width}
+        height={step.image.height}
         alt={step.alt}
         loading="lazy"
         decoding="async"

@@ -35,7 +35,7 @@ export function HomeItem({
               aspectRatio="9/12"
               data={image}
               loading={loading}
-              sizes="(min-width: 45em) 500px, 100vw"
+              sizes="(min-width: 48em) 500px, 50vw"
             />
             <div className="slide-reveal absolute py-8 w-full bottom-0 bg-text/70 flex items-center justify-center">
               <span className="text-bg text-base font-normal font-clash-grotesk">

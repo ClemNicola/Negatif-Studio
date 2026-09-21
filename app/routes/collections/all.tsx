@@ -77,7 +77,7 @@ export default function Collection() {
           <ProductItem
             key={product.id}
             product={product}
-            loading={index < 8 ? 'eager' : undefined}
+            loading={index < 4 ? 'eager' : 'lazy'}
           />
         )}
       </PaginatedResourceSection>

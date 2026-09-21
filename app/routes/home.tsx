@@ -7,12 +7,15 @@ import type {
 } from 'storefrontapi.generated';
 import {HomeItem} from '~/components/HomeItem';
 import {MockShopNotice} from '~/components/MockShopNotice';
-import groceryStore2 from '~/assets/images/grocery-2.webp';
-import swimmer from '~/assets/images/swimmer.webp';
+import {grocery2, swimmer} from '~/assets/images/generated';
 import gsap from 'gsap';
-import {useGSAP, type ReactRef} from '@gsap/react';
+import {useGSAP} from '@gsap/react';
 import {SplitText} from 'gsap/SplitText';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(SplitText, ScrollTrigger);
+
+const HERO_SIZES = '(min-width: 48em) 50vw, 100vw';
 
 export const meta: Route.MetaFunction = () => {
   const title = 'Negatif Studio | 35mm prints, handmade in Paris';
@@ -25,9 +28,21 @@ export const meta: Route.MetaFunction = () => {
     {property: 'og:site_name', content: 'Negatif Studio'},
     {property: 'og:title', content: title},
     {property: 'og:description', content: description},
-    {property: 'og:image', content: groceryStore2},
+    {property: 'og:image', content: grocery2.src},
   ];
 };
+
+export function links() {
+  return [
+    {
+      rel: 'preload',
+      as: 'image',
+      imageSrcSet: grocery2.srcSet,
+      imageSizes: HERO_SIZES,
+      fetchPriority: 'high',
+    },
+  ];
+}
 
 export async function loader(args: Route.LoaderArgs) {
   const deferredData = loadDeferredData(args);
@@ -73,7 +88,6 @@ export default function Homepage() {
 let hasPlayedIntro = false;
 
 function HomePageHero() {
-  gsap.registerPlugin(SplitText);
   const title = useRef<HTMLHeadingElement>(null);
   const description = useRef<HTMLParagraphElement>(null);
   const shopButton = useRef<HTMLAnchorElement>(null);
@@ -172,8 +186,13 @@ function HomePageHero() {
       </div>
       <img
         ref={heroImage}
-        src={groceryStore2}
+        src={grocery2.src}
+        srcSet={grocery2.srcSet}
+        sizes={HERO_SIZES}
+        width={grocery2.width}
+        height={grocery2.height}
         alt="Customers at a corner grocery store, shot on 35mm film"
+        fetchPriority="high"
         decoding="async"
         className="aspect-4/5 w-full object-cover md:aspect-9/16 md:h-full md:max-h-[550px]"
       />
@@ -203,7 +222,11 @@ function HomePageHero2() {
     <section className="grid gap-8 md:grid-cols-2 md:gap-16 md:items-center">
       <img
         ref={hero2Image}
-        src={swimmer}
+        src={swimmer.src}
+        srcSet={swimmer.srcSet}
+        sizes={HERO_SIZES}
+        width={swimmer.width}
+        height={swimmer.height}
         alt="A lone swimmer in open water"
         loading="lazy"
         decoding="async"
@@ -263,7 +286,6 @@ function RecommendedProducts({
 }
 
 function RecommendedGrid({products}: {products: RecommendedProductFragment[]}) {
-  gsap.registerPlugin(ScrollTrigger);
   const imageContainer = useRef<HTMLDivElement>(null);
   useGSAP(
     () => {
@@ -290,7 +312,7 @@ function RecommendedGrid({products}: {products: RecommendedProductFragment[]}) {
       className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8"
     >
       {products.map((product) => (
-        <HomeItem key={product.id} product={product} />
+        <HomeItem key={product.id} product={product} loading="lazy" />
       ))}
     </div>
   );
