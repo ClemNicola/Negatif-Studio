@@ -19,13 +19,8 @@ export const meta: Route.MetaFunction = ({data}) => {
   return [
     {title},
     {name: 'description', content: description},
-    {name: 'og:title', content: title},
-    {name: 'og:description', content: description},
-    {
-      tagName: 'link' as const,
-      rel: 'canonical',
-      href: `/collections/${collection.handle}`,
-    },
+    {property: 'og:title', content: title},
+    {property: 'og:description', content: description},
   ];
 };
 
