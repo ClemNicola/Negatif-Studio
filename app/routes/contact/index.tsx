@@ -142,7 +142,7 @@ function ContactForm({
         error={errors?.message}
       />
       <button
-        className="button-slide w-full py-5 text-sm uppercase tracking-[0.2em] font-clash-grotesk"
+        className="button-slide cursor-pointer w-full py-5 text-sm uppercase tracking-[0.2em] font-clash-grotesk"
         type="submit"
         disabled={isSending}
       >
