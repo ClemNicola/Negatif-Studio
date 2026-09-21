@@ -28,25 +28,24 @@ export function CartSummary({cart, layout}: CartSummaryProps) {
         </dd>
       </dl>
 
-      <CartCheckoutActions checkoutUrl={cart?.checkoutUrl} />
+      <CartCheckoutActions />
     </div>
   );
 }
 
-function CartCheckoutActions({checkoutUrl}: {checkoutUrl?: string}) {
-  if (!checkoutUrl) return null;
-
+function CartCheckoutActions() {
   return (
     <>
-      <a
-        className="button-slide mt-5 block w-full py-4 text-center text-lg font-normal uppercase tracking-widest font-clash-grotesk"
-        href={checkoutUrl}
-        target="_self"
+      <button
+        className="mt-5 block w-full cursor-not-allowed border border-text/20 py-4 text-center text-base md:text-lg font-normal uppercase tracking-widest font-clash-grotesk text-text/40"
+        type="button"
+        disabled
       >
-        Checkout
-      </a>
+        Still looking for the negative
+      </button>
       <p className="pt-4 text-center text-sm text-text/50">
-        Taxes included · shipping at checkout
+        Checkout is off — this storefront is a portfolio build. Nothing ships,
+        nothing is charged.
       </p>
     </>
   );
