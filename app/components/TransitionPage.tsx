@@ -10,6 +10,19 @@ type TransitionPageContextValue = {
   onCurtainClick: (to: string, after?: () => void) => CurtainClickHandler;
 };
 
+const HERO_IMAGE_SELECTOR = 'main img:not([loading="lazy"])';
+const HERO_IMAGE_TIMEOUT = 600;
+
+function waitForHeroImage() {
+  const image = document.querySelector<HTMLImageElement>(HERO_IMAGE_SELECTOR);
+  if (!image || image.complete) return Promise.resolve();
+
+  return Promise.race([
+    image.decode().catch(() => undefined),
+    new Promise((resolve) => setTimeout(resolve, HERO_IMAGE_TIMEOUT)),
+  ]);
+}
+
 function isModifiedClick(event: MouseEvent) {
   return (
     event.button !== 0 ||
@@ -57,7 +70,9 @@ export default function TransitionPage({
         tl.pause();
         const resume = () =>
           requestAnimationFrame(() =>
-            requestAnimationFrame(() => tl.resume() as unknown as void),
+            requestAnimationFrame(() => {
+              void waitForHeroImage().then(() => tl.resume());
+            }),
           );
         Promise.resolve(navigate(to)).then(resume, resume);
       })
