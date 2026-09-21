@@ -273,7 +273,7 @@ function RecommendedProducts({
           View all
         </Link>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<RecommendedSkeleton />}>
         <Await resolve={products}>
           {(response) => (
             <RecommendedGrid products={response?.products?.nodes ?? []} />
@@ -282,6 +282,22 @@ function RecommendedProducts({
       </Suspense>
       <br />
     </section>
+  );
+}
+
+function RecommendedSkeleton() {
+  return (
+    <div
+      aria-hidden="true"
+      className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8"
+    >
+      {[0, 1, 2].map((index) => (
+        <div className="product-item" key={index}>
+          <div className="aspect-9/12 w-full bg-text/5" />
+          <div className="h-5 md:h-6" />
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -303,6 +319,7 @@ function RecommendedGrid({products}: {products: RecommendedProductFragment[]}) {
           },
         },
       );
+      ScrollTrigger.refresh();
     },
     {scope: imageContainer},
   );

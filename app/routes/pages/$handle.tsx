@@ -3,7 +3,11 @@ import type {Route} from './+types/$handle';
 import {redirectIfHandleIsLocalized} from '~/lib/redirect';
 
 export const meta: Route.MetaFunction = ({data}) => {
-  return [{title: `Hydrogen | ${data?.page.title ?? ''}`}];
+  const page = data?.page;
+  if (!page) {
+    return [{title: 'Negatif Studio'}];
+  }
+  return [{title: `${page.seo?.title || page.title} | Negatif Studio`}];
 };
 
 export async function loader(args: Route.LoaderArgs) {
