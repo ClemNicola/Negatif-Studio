@@ -21,6 +21,7 @@ export default hydrogenRoutes([
     index('routes/home.tsx'),
 
     route('studio', 'routes/studio/index.tsx'),
+    route('contact', 'routes/contact/index.tsx'),
     route('search', 'routes/search/index.tsx'),
     route('discount/:code', 'routes/discount/$code.tsx'),
 

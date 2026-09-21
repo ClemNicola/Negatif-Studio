@@ -986,3 +986,53 @@ button.reset:hover:not(:has(> *)) {
   gap: 0.75rem;
   flex-wrap: wrap;
 }
+
+/*
+* --------------------------------------------------
+* routes/contact
+* --------------------------------------------------
+*/
+.contact-label {
+  color: color-mix(in srgb, var(--color-text) 50%, transparent);
+  font-family: var(--font-clash-grotesk);
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.contact-field {
+  border-bottom: 1px solid var(--color-text);
+  padding-bottom: 0.5rem;
+}
+
+.contact-field[data-invalid='true'] {
+  border-bottom-width: 2px;
+}
+
+/* The global `input` reset is unlayered, so it beats Tailwind utilities here. */
+.contact-input {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  color: var(--color-text);
+  display: block;
+  font-size: 1rem;
+  font-weight: 300;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.contact-input:focus {
+  outline: none;
+}
+
+.contact-input::placeholder {
+  color: color-mix(in srgb, var(--color-text) 40%, transparent);
+}
+
+textarea.contact-input {
+  min-height: 11rem;
+  resize: vertical;
+}
